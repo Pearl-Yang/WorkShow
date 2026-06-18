@@ -1,0 +1,2099 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ginyo - Margerat's Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4db6ac;
+            --primary-dark: #26a69a;
+            --primary-light: #80cbc4;
+            --secondary: #e0f2f1;
+            --bg-main: #faf8f5;
+            --bg-card: #ffffff;
+            --bg-nav: rgba(250, 248, 245, 0.95);
+            --text-primary: #3e2723;
+            --text-secondary: #5d4037;
+            --text-light: #8d6e63;
+            --border: #e8e0d8;
+            --shadow: rgba(62, 39, 35, 0.08);
+            --accent: #26a69a;
+            --warm-primary: #a1887f;
+            --warm-light: #d7ccc8;
+            --warm-bg: #efebe9;
+            --cream: #f5f0eb;
+            --gradient-warm: linear-gradient(135deg, #4db6ac 0%, #80cbc4 50%, #b2dfdb 100%);
+            --gradient-cream: linear-gradient(135deg, #f5f0eb 0%, #efebe9 100%);
+            --gradient-hero: linear-gradient(135deg, #faf8f5 0%, #f5f0eb 50%, #e8e0d8 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-main);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* ========== 鼠标跟随光效 ========== */
+        .cursor-glow {
+            position: fixed;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(212, 132, 124, 0.15) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: opacity 0.3s;
+            opacity: 0;
+        }
+
+        .cursor-glow.active {
+            opacity: 1;
+        }
+
+        /* ========== 浮动气泡背景 ========== */
+        .floating-bubbles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .bubble {
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-light), var(--warm-light));
+            opacity: 0.35;
+            animation: floatUp linear infinite;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.3;
+            }
+            90% {
+                opacity: 0.3;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* ========== 入场动画 ========== */
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .fade-in-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .fade-in-left {
+            opacity: 0;
+            transform: translateX(-30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .fade-in-left.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .fade-in-right {
+            opacity: 0;
+            transform: translateX(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .fade-in-right.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* ========== Logo 点击彩蛋 ========== */
+        .logo {
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .logo .emoji-burst {
+            position: fixed;
+            font-size: 24px;
+            pointer-events: none;
+            z-index: 10000;
+            animation: emojiFloat 1s ease-out forwards;
+        }
+
+        @keyframes emojiFloat {
+            0% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-100px) scale(1.5);
+            }
+        }
+
+        /* ========== 打字机效果 ========== */
+        .typewriter {
+            overflow: hidden;
+            white-space: nowrap;
+            border-right: 3px solid var(--primary);
+            animation: blink 0.8s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { border-color: var(--primary); }
+            50% { border-color: transparent; }
+        }
+
+        /* ========== 技能标签动画 ========== */
+        .skill-item {
+            padding: 0.5rem 1rem;
+            background: var(--bg-main);
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            transition: all 0.3s;
+            cursor: default;
+        }
+
+        .skill-item:hover {
+            background: var(--gradient-warm);
+            color: white;
+            border-color: var(--primary);
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(77, 182, 172, 0.3);
+        }
+
+        /* ========== 导航栏 ========== */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 1.25rem 3rem;
+            background: var(--bg-nav);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
+        }
+
+        .logo span {
+            color: var(--primary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--text-primary);
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        .nav-social {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .nav-social a {
+            color: var(--text-light);
+            font-size: 1rem;
+            transition: color 0.3s;
+        }
+
+        .nav-social a:hover {
+            color: var(--primary);
+        }
+
+        /* ========== 导航链接脉冲动画 ========== */
+        .nav-links a.active::before {
+            content: '';
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: var(--primary);
+            border-radius: 50%;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: pulse-dot 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: translateX(-50%) scale(1); }
+            50% { opacity: 0.5; transform: translateX(-50%) scale(1.3); }
+        }
+
+        /* ========== 首页装饰动画 ========== */
+        .home-decoration {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(135deg, var(--primary-light), var(--warm-light));
+            border-radius: 50%;
+            opacity: 0.35;
+            z-index: -1;
+            transition: all 0.5s ease;
+        }
+
+        .home-decoration.top {
+            top: -50px;
+            right: -50px;
+            animation: float-decoration 6s ease-in-out infinite;
+        }
+
+        .home-decoration.bottom {
+            bottom: -30px;
+            left: -30px;
+            width: 120px;
+            height: 120px;
+            animation: float-decoration 8s ease-in-out infinite reverse;
+        }
+
+        @keyframes float-decoration {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(10px, -10px) rotate(5deg); }
+            50% { transform: translate(0, -20px) rotate(0deg); }
+            75% { transform: translate(-10px, -10px) rotate(-5deg); }
+        }
+
+        .home-visual:hover .home-decoration.top {
+            transform: translate(15px, -15px) scale(1.1);
+        }
+
+        .home-visual:hover .home-decoration.bottom {
+            transform: translate(-15px, 15px) scale(1.1);
+        }
+
+        /* ========== 通用区块 ========== */
+        section {
+            min-height: 100vh;
+            padding: 6rem 0;
+            position: relative;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 3rem;
+        }
+
+        .section-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--primary);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 0.75rem;
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 4vw, 2.75rem);
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.3;
+            margin-bottom: 1.5rem;
+        }
+
+        /* ========== 首页 ========== */
+        #home {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 0;
+            background: var(--gradient-hero);
+        }
+
+        .home-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 3rem;
+        }
+
+        .home-text {
+            padding-right: 2rem;
+        }
+
+        .home-text h1 {
+            font-size: clamp(3rem, 6vw, 4.5rem);
+            font-weight: 600;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+        }
+
+        .home-text h1 .highlight {
+            color: var(--primary);
+        }
+
+        .home-text p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 2.5rem;
+            line-height: 1.8;
+        }
+
+        .home-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.875rem 1.75rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--gradient-warm);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(77, 182, 172, 0.35);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-primary);
+            border: 1.5px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .home-visual {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .home-image-wrapper {
+            width: 100%;
+            max-width: 420px;
+            aspect-ratio: 4/5;
+            border-radius: 2rem;
+            overflow: hidden;
+            box-shadow: 0 40px 80px rgba(212, 132, 124, 0.15);
+            position: relative;
+        }
+
+        .home-image-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* ========== 关于 ========== */
+        #about {
+            background: linear-gradient(180deg, var(--bg-card) 0%, var(--cream) 100%);
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 5rem;
+            align-items: start;
+        }
+
+        .about-text p {
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            line-height: 1.9;
+        }
+
+        .about-text p strong {
+            color: var(--text-primary);
+        }
+
+        .about-skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-top: 2rem;
+        }
+
+        .about-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 2rem 1.5rem;
+            background: var(--bg-main);
+            border-radius: 1.5rem;
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px var(--shadow);
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        /* ========== 统计数字滚动 ========== */
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            line-height: 1;
+            margin-bottom: 0.5rem;
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* ========== 3D 卡片效果 ========== */
+        .work-card {
+            background: var(--bg-card);
+            border-radius: 1.5rem;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            transition: all 0.4s;
+            cursor: pointer;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        .work-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 50px var(--shadow);
+        }
+
+        .work-card.tilt {
+            transition: transform 0.1s ease;
+        }
+
+        .work-card-glow {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, var(--primary-light), var(--warm-light));
+            opacity: 0;
+            transition: opacity 0.3s;
+            border-radius: 1.5rem;
+            z-index: -1;
+        }
+
+        .work-card:hover .work-card-glow {
+            opacity: 0.1;
+        }
+
+        /* ========== 作品 ========== */
+        #works {
+            background: var(--bg-main);
+        }
+
+        .works-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .works-header p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .works-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+
+        .work-card {
+            background: var(--bg-card);
+            border-radius: 1.5rem;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            transition: all 0.4s;
+            cursor: pointer;
+        }
+
+        .work-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 50px var(--shadow);
+        }
+
+        .work-image {
+            width: 100%;
+            aspect-ratio: 16/10;
+            overflow: hidden;
+            position: relative;
+            background: linear-gradient(135deg, var(--bg-main), var(--border));
+        }
+
+        .work-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s;
+        }
+
+        .work-card:hover .work-image img {
+            transform: scale(1.05);
+        }
+
+        .work-image canvas {
+            display: none;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* ========== 图片悬浮效果 ========== */
+        .work-card .work-image {
+            overflow: hidden;
+            position: relative;
+        }
+
+        .work-card .work-image::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to top, rgba(45, 41, 38, 0.3), transparent);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .work-card:hover .work-image::after {
+            opacity: 1;
+        }
+
+        .work-card:hover .work-image canvas:not(.work-no-image) {
+            transform: scale(1.08);
+        }
+
+        .work-no-image {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary-light), var(--warm-light));
+            color: white;
+            font-size: 3rem;
+        }
+
+        .work-tag {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            padding: 0.4rem 1rem;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .work-content {
+            padding: 1.75rem;
+        }
+
+        .work-content h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .work-content p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .work-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .work-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        /* ========== 作品工具栏 ========== */
+        .works-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+            flex-wrap: wrap;
+        }
+
+        .works-search {
+            position: relative;
+            flex: 1;
+            max-width: 320px;
+        }
+
+        .works-search i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+        }
+
+        .works-search input {
+            width: 100%;
+            padding: 0.875rem 1rem 0.875rem 2.75rem;
+            background: var(--bg-card);
+            border: 1.5px solid var(--border);
+            border-radius: 50px;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            transition: all 0.3s;
+        }
+
+        .works-search input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(212, 132, 124, 0.1);
+        }
+
+        .works-search input::placeholder {
+            color: var(--text-light);
+        }
+
+        .works-filter {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .filter-btn {
+            padding: 0.625rem 1.5rem;
+            background: var(--bg-card);
+            border: 1.5px solid var(--border);
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .filter-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .filter-btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        .works-empty {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-light);
+        }
+
+        .works-empty i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .works-empty p {
+            font-size: 1.1rem;
+        }
+
+        .work-github {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.35rem 0.75rem;
+            background: var(--bg-main);
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.75rem;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .work-github:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        .work-tech {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .tech-tag {
+            padding: 0.25rem 0.6rem;
+            background: linear-gradient(135deg, rgba(212, 132, 124, 0.1), rgba(245, 208, 197, 0.1));
+            border-radius: 50px;
+            font-size: 0.7rem;
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        /* ========== 联系 ========== */
+        #contact {
+            background: linear-gradient(180deg, var(--cream) 0%, var(--warm-bg) 100%);
+        }
+
+        .contact-content {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 5rem;
+            align-items: start;
+        }
+
+        .contact-info h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .contact-info>p {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            line-height: 1.8;
+        }
+
+        .contact-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .contact-item-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--bg-main);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+
+        .contact-item-text {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+        }
+
+        .contact-item-text strong {
+            display: block;
+            color: var(--text-primary);
+            font-weight: 600;
+            margin-bottom: 0.15rem;
+        }
+
+        .contact-social {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .contact-social a {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--bg-main);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            transition: all 0.3s;
+        }
+
+        .contact-social a:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        .contact-form-wrapper {
+            background: var(--bg-main);
+            border-radius: 1.5rem;
+            padding: 2.5rem;
+            border: 1px solid var(--border);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            background: var(--bg-card);
+            border: 1.5px solid var(--border);
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: inherit;
+            color: var(--text-primary);
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(212, 132, 124, 0.1);
+        }
+
+        .form-group textarea {
+            min-height: 140px;
+            resize: vertical;
+        }
+
+        .contact-form .btn {
+            width: 100%;
+            justify-content: center;
+        }
+
+        /* ========== 表单输入动画 ========== */
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            background: var(--bg-card);
+            border: 1.5px solid var(--border);
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: inherit;
+            color: var(--text-primary);
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        .form-group::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: all 0.3s;
+            transform: translateX(-50%);
+        }
+
+        .form-group:focus-within::after {
+            width: 100%;
+        }
+
+        /* ========== 社交按钮涟漪 ========== */
+        .contact-social a {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--bg-main);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-social a::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: var(--primary);
+            transform: translate(-50%, -50%);
+            transition: all 0.4s;
+        }
+
+        .contact-social a:hover::before {
+            width: 100%;
+            height: 100%;
+        }
+
+        .contact-social a:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        .contact-social a i {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ========== 加载动画 ========== */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-main);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+            transition: opacity 0.5s, visibility 0.5s;
+        }
+
+        .loading-overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loading-spinner {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .loading-spinner .dots {
+            display: flex;
+            gap: 8px;
+        }
+
+        .loading-spinner .dot {
+            width: 12px;
+            height: 12px;
+            background: var(--primary);
+            border-radius: 50%;
+            animation: bounce 1.4s ease-in-out infinite both;
+        }
+
+        .loading-spinner .dot:nth-child(1) { animation-delay: -0.32s; }
+        .loading-spinner .dot:nth-child(2) { animation-delay: -0.16s; }
+        .loading-spinner .dot:nth-child(3) { animation-delay: 0s; }
+
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+
+        .loading-text {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        /* ========== 页脚 ========== */
+        footer {
+            padding: 2rem 3rem;
+            background: var(--bg-main);
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        footer p {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        /* ========== 提示 ========== */
+        .watermark-notice {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--bg-card);
+            border: 1px solid var(--primary);
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1500;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            box-shadow: 0 4px 20px rgba(212, 132, 124, 0.2);
+        }
+
+        .watermark-notice.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .watermark-notice i {
+            color: var(--primary);
+        }
+
+        /* ========== 响应式 ========== */
+        @media (max-width: 968px) {
+            nav {
+                padding: 1rem 1.5rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .home-content {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+                padding: 0 1.5rem;
+                text-align: center;
+            }
+
+            .home-text {
+                padding-right: 0;
+                order: 2;
+            }
+
+            .home-visual {
+                order: 1;
+            }
+
+            .home-image-wrapper {
+                max-width: 300px;
+            }
+
+            .home-buttons {
+                justify-content: center;
+            }
+
+            .about-content,
+            .contact-content {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .works-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .works-toolbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .works-search {
+                max-width: none;
+            }
+
+            .works-filter {
+                justify-content: center;
+            }
+
+            .about-stats {
+                grid-template-columns: 1fr;
+            }
+
+            footer {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .container {
+                padding: 0 1.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 加载动画 -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner">
+            <div class="dots">
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
+            <div class="loading-text">正在加载中...</div>
+        </div>
+    </div>
+
+    <!-- 鼠标跟随光效 -->
+    <div class="cursor-glow" id="cursorGlow"></div>
+
+    <!-- 浮动气泡背景 -->
+    <div class="floating-bubbles" id="floatingBubbles"></div>
+    <!-- 导航栏 -->
+    <nav>
+        <div class="logo">Ginyo <span>by Margerat</span></div>
+        <ul class="nav-links">
+            <li><a href="#home" class="active">首页</a></li>
+            <li><a href="#about">关于</a></li>
+            <li><a href="#works">作品</a></li>
+            <li><a href="#contact">联系</a></li>
+        </ul>
+        <div class="nav-social">
+            <a href="https://github.com/Pearl-Yang" target="_blank"><i class="fab fa-github"></i></a>
+            <a href="https://xhslink.com/m/2i0EIVzHCua" target="_blank"><i class="fas fa-heart"></i></a>
+        </div>
+    </nav>
+
+    <!-- 首页 -->
+    <section id="home">
+        <div class="home-content">
+            <div class="home-text fade-in-left">
+                <h1>你好，我是 <span class="highlight">Margaret</span></h1>
+                <p>专注原型设计、网页开发与视觉设计。通过墨刀进行原型设计，使用 Vue 和 HTML 进行前端开发，同时擅长 PS 图片处理和商业设计。</p>
+                <div class="home-buttons">
+                    <a href="#works" class="btn btn-primary">
+                        <i class="fas fa-folder-open"></i>
+                        查看作品
+                    </a>
+                    <a href="#contact" class="btn btn-secondary">
+                        <i class="fas fa-paper-plane"></i>
+                        联系我
+                    </a>
+                </div>
+            </div>
+            <div class="home-visual fade-in-right">
+                <div class="home-decoration top"></div>
+                <div class="home-decoration bottom"></div>
+                <div class="home-image-wrapper">
+                    <img src="images/id-photo.jpg" alt="Margerat">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 关于 -->
+    <section id="about">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-text fade-in-left">
+                    <div class="section-label">About Me</div>
+                    <h2 class="section-title">关于我</h2>
+                    <p>你好，我叫 <strong>Margerat（Ginyo）</strong>，一名具备全链路设计能力与前端开发基础的 <strong>UI/UX 设计师。</strong></p>
+                    <p>我擅长从需求调研、用户研究出发，通过信息架构梳理与交互原型设计，将复杂业务逻辑转化为清晰易用的产品体验。</p>
+                    <p>熟练使用 <strong>Figma、Axure、墨刀</strong> 等工具完成从低保真到高保真的全流程设计，并能独立搭建模块化组件库与设计系统。不同于纯视觉设计师，我掌握
+                        <strong>Vue、HTML、CSS、JS</strong> 等前端技术，能与开发团队高效协作，确保设计方案的精准还原。
+                    </p>
+                    <p>在智慧检务、校园服务、适老化养老、普法科普等多个领域的完整项目中，我始终追求设计美学与商业价值的平衡，相信好的设计不仅要好看，更要解决真实问题。</p>
+                    <p>每一份作品我都倾注了心血与创意，欢迎欣赏我的作品集！</p>
+
+                    <div class="about-skills">
+                        <span class="skill-item">墨刀原型设计</span>
+                        <span class="skill-item">Vue开发</span>
+                        <span class="skill-item">HTML/CSS</span>
+                        <span class="skill-item">PS图片处理</span>
+                        <span class="skill-item">商业海报设计</span>
+                        <span class="skill-item">小程序开发</span>
+                    </div>
+                </div>
+                <div class="about-stats fade-in-right">
+                    <div class="stat-card">
+                        <div class="stat-number">4846</div>
+                        <div class="stat-label">小红书获赞</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">5</div>
+                        <div class="stat-label">设计技能</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">∞</div>
+                        <div class="stat-label">创作热情</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 作品 -->
+    <section id="works">
+        <div class="container">
+            <div class="works-header fade-in-up">
+                <div class="section-label">Portfolio</div>
+                <h2 class="section-title">精选作品</h2>
+                <p>点击任意作品卡片，查看详细的项目介绍</p>
+            </div>
+            <!-- 搜索和筛选 -->
+            <div class="works-toolbar">
+                <div class="works-search">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="搜索作品..." oninput="filterWorks()">
+                </div>
+                <div class="works-filter">
+                    <button class="filter-btn active" data-category="all" onclick="setCategory('all')">全部</button>
+                    <button class="filter-btn" data-category="web" onclick="setCategory('web')">Web开发</button>
+                    <button class="filter-btn" data-category="design" onclick="setCategory('design')">PS设计</button>
+                </div>
+            </div>
+            <div class="works-grid" id="worksGrid"></div>
+            <div class="works-empty" id="worksEmpty" style="display: none;">
+                <i class="fas fa-search"></i>
+                <p>没有找到匹配的作品</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 联系 -->
+    <section id="contact">
+        <div class="container">
+            <div class="contact-content">
+                <div class="contact-info">
+                    <div class="section-label">Contact</div>
+                    <h2 class="section-title">联系我</h2>
+                    <p>有合作意向或任何问题，欢迎随时联系我！</p>
+
+                    <div class="contact-list">
+                        <div class="contact-item">
+                            <div class="contact-item-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="contact-item-text">
+                                <strong>邮箱</strong>
+                                462764857@qq.com
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-item-icon">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div class="contact-item-text">
+                                <strong>电话</strong>
+                                13466256441
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-item-icon">
+                                <i class="fab fa-weixin"></i>
+                            </div>
+                            <div class="contact-item-text">
+                                <strong>微信</strong>
+                                wdwcpyq63
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="contact-social">
+                        <a href="https://github.com/Pearl-Yang" target="_blank" title="GitHub">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="https://xhslink.com/m/2i0EIVzHCua" target="_blank" title="小红书">
+                            <i class="fas fa-heart"></i>
+                        </a>
+                        <a href="mailto:462764857@qq.com" title="邮箱">
+                            <i class="fas fa-envelope"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="contact-form-wrapper">
+                    <form class="contact-form" onsubmit="handleSubmit(event)">
+                        <div class="form-group">
+                            <label>姓名</label>
+                            <input type="text" placeholder="请输入您的姓名" required>
+                        </div>
+                        <div class="form-group">
+                            <label>邮箱</label>
+                            <input type="email" placeholder="请输入您的邮箱" required>
+                        </div>
+                        <div class="form-group">
+                            <label>留言</label>
+                            <textarea placeholder="请输入您的留言..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i>
+                            发送消息
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer>
+        <p>&copy; 2026 Ginyo by Margerat. All rights reserved.</p>
+        <p>小红书获赞 4846+ | 持续创作中</p>
+    </footer>
+
+    <!-- 提示 -->
+    <div class="watermark-notice" id="watermarkNotice">
+        <i class="fas fa-info-circle"></i>
+        <span id="noticeText"></span>
+    </div>
+
+    <script>
+        // ========== 加载动画 ==========
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loadingOverlay').classList.add('hidden');
+            }, 800);
+        });
+
+        // ========== 鼠标跟随光效 ==========
+        const cursorGlow = document.getElementById('cursorGlow');
+        let mouseX = 0, mouseY = 0;
+        let glowX = 0, glowY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            cursorGlow.classList.add('active');
+        });
+
+        document.addEventListener('mouseleave', () => {
+            cursorGlow.classList.remove('active');
+        });
+
+        function animateCursorGlow() {
+            glowX += (mouseX - glowX) * 0.1;
+            glowY += (mouseY - glowY) * 0.1;
+            cursorGlow.style.left = glowX + 'px';
+            cursorGlow.style.top = glowY + 'px';
+            requestAnimationFrame(animateCursorGlow);
+        }
+        animateCursorGlow();
+
+        // ========== 浮动气泡 ==========
+        function createBubble() {
+            const bubble = document.createElement('div');
+            bubble.className = 'bubble';
+            const size = Math.random() * 20 + 10;
+            bubble.style.width = size + 'px';
+            bubble.style.height = size + 'px';
+            bubble.style.left = Math.random() * 100 + '%';
+            bubble.style.animationDuration = (Math.random() * 10 + 10) + 's';
+            bubble.style.animationDelay = Math.random() * 5 + 's';
+            document.getElementById('floatingBubbles').appendChild(bubble);
+
+            setTimeout(() => bubble.remove(), 20000);
+        }
+
+        setInterval(createBubble, 3000);
+        for (let i = 0; i < 5; i++) setTimeout(createBubble, i * 600);
+
+        // ========== Logo 点击彩蛋 ==========
+        const emojis = ['✨', '💖', '🌸', '⭐', '🎨', '💫', '🌟', '💝'];
+        document.querySelector('.logo').addEventListener('click', (e) => {
+            for (let i = 0; i < 6; i++) {
+                const emoji = document.createElement('div');
+                emoji.className = 'emoji-burst';
+                emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                emoji.style.left = (e.clientX + (Math.random() - 0.5) * 60) + 'px';
+                emoji.style.top = e.clientY + 'px';
+                emoji.style.animationDelay = (i * 0.05) + 's';
+                document.body.appendChild(emoji);
+                setTimeout(() => emoji.remove(), 1000);
+            }
+        });
+
+        // ========== 打字机效果 ==========
+        const typewriterElement = document.querySelector('.home-text h1');
+        const originalText = typewriterElement.innerHTML;
+        const textSpan = document.createElement('span');
+        textSpan.className = 'typewriter';
+
+        function typeWriter() {
+            typewriterElement.innerHTML = '';
+            typewriterElement.appendChild(textSpan);
+            let i = 0;
+            typewriterElement.innerHTML = originalText.replace('Margerat', '<span class="highlight typewriter-text"></span>');
+            const typewriterText = typewriterElement.querySelector('.typewriter-text');
+            if (!typewriterText) return;
+
+            let charIndex = 0;
+            const fullText = 'Margerat';
+            typewriterText.textContent = '';
+
+            function type() {
+                if (charIndex < fullText.length) {
+                    typewriterText.textContent += fullText.charAt(charIndex);
+                    charIndex++;
+                    setTimeout(type, 150);
+                } else {
+                    typewriterText.classList.remove('typewriter');
+                    // 移除闪烁光标
+                    setTimeout(() => {
+                        typewriterElement.innerHTML = originalText;
+                    }, 2000);
+                }
+            }
+
+            setTimeout(type, 500);
+        }
+
+        // ========== 3D 卡片倾斜效果 ==========
+        function add3DCardEffect() {
+            document.querySelectorAll('.work-card').forEach(card => {
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    const rotateX = (y - centerY) / 10;
+                    const rotateY = (centerX - x) / 10;
+
+                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px)`;
+                });
+
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(0)';
+                });
+            });
+        }
+
+        // ========== 滚动入场动画 ==========
+        function handleScrollAnimations() {
+            const elements = document.querySelectorAll('.fade-in-up, .fade-in-left, .fade-in-right');
+            elements.forEach(el => {
+                const rect = el.getBoundingClientRect();
+                const isVisible = rect.top < window.innerHeight - 100;
+                if (isVisible) {
+                    el.classList.add('visible');
+                }
+            });
+        }
+
+        // ========== 数字滚动动画 ==========
+        function animateNumber(element, target, duration = 1500) {
+            const start = 0;
+            const startTime = performance.now();
+
+            function update(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const easeOut = 1 - Math.pow(1 - progress, 3);
+                const current = Math.floor(start + (target - start) * easeOut);
+
+                if (element.textContent === '∞') return;
+
+                element.textContent = current;
+
+                if (progress < 1) {
+                    requestAnimationFrame(update);
+                }
+            }
+
+            requestAnimationFrame(update);
+        }
+
+        let statsAnimated = false;
+        function checkStatsVisibility() {
+            const statsSection = document.querySelector('.about-stats');
+            if (!statsSection || statsAnimated) return;
+
+            const rect = statsSection.getBoundingClientRect();
+            if (rect.top < window.innerHeight - 100) {
+                statsAnimated = true;
+                document.querySelectorAll('.stat-number').forEach(num => {
+                    const target = num.textContent;
+                    if (target === '∞') return;
+
+                    const targetNum = parseInt(target.replace(/[^0-9]/g, ''));
+                    if (!isNaN(targetNum)) {
+                        animateNumber(num, targetNum);
+                    }
+                });
+            }
+        }
+
+        // ========== 水印配置 ==========
+        const WATERMARK_CONFIG = {
+            text: '© Ginyo by Margerat',
+            font: '14px Inter, sans-serif',
+            color: 'rgba(212, 132, 124, 0.1)',
+            spacingX: 180,
+            spacingY: 100,
+            angle: -25
+        };
+
+        // 作品数据
+        const worksData = [
+            {
+                id: 1,
+                title: '上大学Online — 校园综合服务平台',
+                tag: 'UI/UX设计 + 前端实现',
+                image: 'images/online_UN/屏幕截图_2-12-2025_15352_ggbond-zhuzhu.github.io.jpeg',
+                description: '针对高校学生多平台切换办理业务的痛点，打造网页端+微信小程序端一体化校园服务平台，实现"一校一集合、一人一身份、一站全服务"。',
+                color: '#d4847c',
+                date: '2025.06 - 至今',
+                category: 'web',
+                github: 'https://github.com/Pearl-Yang/online_UN',
+                tech: ['Vue3', 'HTML5', 'CSS3', 'JavaScript'],
+                screenshots: [
+                    { title: '首页', color: '#4db6ac', icon: 'fa-home' },
+                    { title: '登录页面', color: '#26a69a', icon: 'fa-user' },
+                    { title: '服务列表', color: '#80cbc4', icon: 'fa-th-large' },
+                    { title: '个人中心', color: '#b2dfdb', icon: 'fa-user-circle' }
+                ]
+            },
+            {
+                id: 2,
+                title: 'EcoLaw 生态法治普法平台',
+                tag: 'UI/UX设计 + AI交互',
+                description: '基于AI技术的生态法治互动普法软件，支持小程序、APP、H5多端，含AI法规解读与虚拟宠物养成，让法律学习变得有趣。',
+                color: '#4db6ac',
+                date: '2025.09 - 至今',
+                category: 'web',
+                github: 'https://github.com/Pearl-Yang/EcoLaw',
+                tech: ['Vue3', 'AI NLP', '微信小程序'],
+                screenshots: [
+                    { title: '首页', color: '#26a69a', icon: 'fa-leaf' },
+                    { title: 'AI对话', color: '#009688', icon: 'fa-robot' },
+                    { title: '知识库', color: '#80cbc4', icon: 'fa-book' },
+                    { title: '宠物养成', color: '#b2dfdb', icon: 'fa-paw' }
+                ]
+            },
+            {
+                id: 3,
+                title: 'CareMe 智慧养老助手',
+                tag: 'UI/UX设计 + 多语言适配',
+                description: '专为长者打造的AI养老助手，大字极简界面、全语音操作，支持苗语/哈尼语适配，让科技有温度。',
+                color: '#4db6ac',
+                date: '2025.03 - 至今',
+                category: 'web',
+                github: 'https://github.com/Pearl-Yang/CareMe',
+                tech: ['Vue3', '语音交互', '多语言适配'],
+                screenshots: [
+                    { title: '首页', color: '#26a69a', icon: 'fa-heart' },
+                    { title: '语音助手', color: '#009688', icon: 'fa-microphone' },
+                    { title: '健康数据', color: '#80cbc4', icon: 'fa-heartbeat' },
+                    { title: '设置', color: '#b2dfdb', icon: 'fa-cog' }
+                ]
+            },
+            {
+                id: 4,
+                title: 'CaseGuardian 检管家',
+                tag: 'UI/UX设计 + 企业级系统',
+                image: 'images/CaseGuardian/08-login-page.png',
+                description: '面向检察机关的案件全流程智慧化管理平台，九大功能模块，四层AI融合架构，助力智慧检务建设。',
+                color: '#4db6ac',
+                date: '2024.11 - 至今',
+                category: 'web',
+                github: 'https://github.com/Pearl-Yang/CaseGuardian',
+                tech: ['Vue3', 'AI', '规则引擎'],
+                screenshots: [
+                    { title: '仪表盘', color: '#26a69a', icon: 'fa-chart-line' },
+                    { title: '案件列表', color: '#009688', icon: 'fa-folder-open' },
+                    { title: '案件详情', color: '#80cbc4', icon: 'fa-file-alt' },
+                    { title: '数据分析', color: '#b2dfdb', icon: 'fa-chart-bar' }
+                ]
+            },
+            {
+                id: 5,
+                title: 'uniapp 上大学Online小程序',
+                tag: 'UI/UX设计 + 小程序开发',
+                description: '上大学Online微信小程序版本，聚合校园服务多功能平台，轻量化设计，即开即用的校园服务体验。',
+                color: '#4db6ac',
+                date: '2025.08 - 至今',
+                category: 'web',
+                github: 'https://github.com/Pearl-Yang/uniapp_OnlineUN',
+                tech: ['uni-app', '微信小程序'],
+                screenshots: [
+                    { title: '首页', color: '#26a69a', icon: 'fa-home' },
+                    { title: '服务分类', color: '#009688', icon: 'fa-th' },
+                    { title: '搜索', color: '#80cbc4', icon: 'fa-search' },
+                    { title: '我的', color: '#b2dfdb', icon: 'fa-user' }
+                ]
+            },
+            {
+                id: 6,
+                title: 'PS 设计作品 - 苹果海报',
+                tag: '海报设计',
+                description: '精心设计的苹果主题商业海报，色彩鲜明吸引眼球',
+                color: '#d4847c',
+                image: 'images/apple-poster.png',
+                date: '2026.05',
+                category: 'design',
+                github: null,
+                tech: ['Photoshop', '商稿设计'],
+                background: '为水果零售品牌设计的季节性推广海报，旨在通过鲜明的色彩和诱人的食欲感，吸引年轻消费群体的目光，提升品牌在社交媒体上的传播效果。',
+                designConcept: '以"新鲜、健康、自然"为核心理念，通过暖色调营造温馨感，运用光影效果突出苹果的立体质感，让观者产生强烈的购买欲望。',
+                palette: ['#4db6ac', '#80cbc4', '#b2dfdb', '#26a69a', '#009688', '#e0f2f1'],
+                designCategory: '海报设计',
+                designDescription: '采用中心构图方式，将苹果置于视觉焦点，配合渐变背景营造层次感。运用高光与阴影的对比突出果实的光泽度，文字排版简洁有力，层次分明。通过暖色调的统一运用，强化品牌的亲和力与产品的食欲感。',
+                keywords: ['#食欲感', '#暖色调', '#商业摄影', '#质感', '#季节营销']
+            },
+            {
+                id: 7,
+                title: 'PS 设计作品 - 小雏菊',
+                tag: '品牌视觉',
+                description: '清新自然的小雏菊主题视觉设计，简约优雅',
+                color: '#7c9a6a',
+                image: 'images/daisy.png',
+                date: '2026.05',
+                category: 'design',
+                github: null,
+                tech: ['Photoshop', '商稿设计'],
+                background: '为花店品牌设计的视觉形象素材，适用于包装设计、名片及社交媒体配图。目标用户为追求生活品质、喜爱自然风格的都市年轻女性。',
+                designConcept: '追求"简约而不简单"的设计理念，以小雏菊为核心元素，通过留白与色彩搭配传递清新、自然、治愈的品牌调性。',
+                palette: ['#4db6ac', '#80cbc4', '#b2dfdb', '#26a69a', '#e0f2f1', '#ffffff'],
+                designCategory: '品牌视觉',
+                designDescription: '整体风格追求极简美学，以大面积留白突出小雏菊的柔美姿态。花瓣采用渐变处理，层次分明而不失轻盈感。配色以绿色和白色为主调，点缀淡黄色花蕊，呼应自然主题。边框处理采用圆角设计，增添柔和亲切感。',
+                keywords: ['#简约', '#自然', '#留白', '#小清新', '#治愈系']
+            },
+            {
+                id: 8,
+                title: 'PS 设计作品 - 三角洲陪玩电竞',
+                tag: '海报设计',
+                description: '动感炫酷的电竞主题宣传海报，年轻人的游戏风格',
+                color: '#6a7c9a',
+                image: 'images/esports-poster.png',
+                date: '2026.03',
+                category: 'design',
+                github: null,
+                tech: ['Photoshop', '电竞设计'],
+                background: '为电竞陪玩平台设计的宣传海报，目标是吸引18-25岁的年轻游戏玩家群体，需要在视觉上体现专业性与潮流感的平衡。',
+                designConcept: '融合"科技感"与"年轻化"两大元素，通过霓虹光效和动态构图营造强烈的视觉冲击力，传递"专业陪玩、快乐游戏"的品牌理念。',
+                palette: ['#546e7a', '#78909c', '#90a4ae', '#37474f', '#263238', '#eceff1'],
+                designCategory: '海报设计',
+                designDescription: '采用深色背景搭配霓虹光效的设计手法，营造沉浸式的电竞氛围。几何图形的堆叠与光效线条的运用，增强画面的科技感与未来感。人物剪影与光效的结合，暗示陪玩服务的专业性。整体构图动感十足，符合年轻玩家的审美偏好。',
+                keywords: ['#电竞', '#科技感', '#霓虹', '#动效', '#年轻化']
+            },
+            {
+                id: 9,
+                title: 'PS 设计作品 - 荔枝磨砂质感海报',
+                tag: '海报设计',
+                description: '高级磨砂质感风格的荔枝主题海报，现代轻奢设计',
+                color: '#9a6a7c',
+                image: 'images/lychee-poster.png',
+                date: '2026.02',
+                category: 'design',
+                github: null,
+                tech: ['Photoshop', '商稿设计'],
+                background: '为高端水果品牌设计的轻奢风格海报，目标用户为追求品质生活的中高消费群体，需要体现产品的高端定位与精致格调。',
+                designConcept: '以"轻奢、精致、格调"为核心，通过磨砂质感与莫兰迪色调的运用，打造高级感满满的视觉体验，让普通的水果也能呈现出艺术品般的质感。',
+                palette: ['#4db6ac', '#80cbc4', '#b2dfdb', '#26a69a', '#e0f2f1', '#f5faf9'],
+                designCategory: '海报设计',
+                designDescription: '整体采用低饱和度的莫兰迪配色，营造温柔优雅的视觉感受。磨砂质感是该设计的亮点，通过颗粒感与柔焦效果的结合，赋予画面独特的触感联想。荔枝果实的光泽与磨砂背景形成对比，层次分明。文字采用细体字设计，与整体的精致感相呼应。',
+                keywords: ['#轻奢', '#磨砂质感', '#莫兰迪', '#高级感', '#精致']
+            },
+            {
+                id: 10,
+                title: '人物IP设计 - 可爱小女孩形象',
+                tag: 'IP形象设计',
+                description: '原创可爱小女孩IP形象，多场景多姿态设计，适合品牌视觉应用',
+                color: '#f8bbd9',
+                image: 'images/人物IP设计/笙笙屏边城市ip.png',
+                date: '2026.06',
+                category: 'design',
+                github: null,
+                tech: ['Photoshop', 'IP设计', '品牌视觉'],
+                background: '为品牌打造原创IP形象，定位可爱治愈风格的小女孩角色。设计包含多角度基础形象、表情姿态变体（帽子款、眼镜款、围巾款等）、以及商业应用场景展示，适用于周边产品、宣发物料等品牌延展。',
+                designConcept: '以"可爱、治愈、温暖"为核心理念，打造具有亲和力的IP形象。通过圆润的造型、明快的色彩和丰富的表情姿态，让IP成为品牌与用户之间的情感纽带。',
+                palette: ['#f8bbd9', '#ffe4ec', '#ffd54f', '#81d4fa', '#a5d6a7', '#ffffff'],
+                designCategory: 'IP形象设计',
+                designDescription: 'IP形象采用圆脸、大眼睛、圆润身材的可爱造型。配色以粉色系为主色调，搭配明黄色、水蓝色等活力色彩。设计包含正面/侧面/背面多角度展示，以及开心、俏皮、乖巧等多种表情姿态。商业应用展示了抱枕、胸牌、名片马克杯、帆布包等多种周边物料的延展效果。',
+                keywords: ['#可爱', '#治愈', '#小女孩', '#品牌IP', '#商业延展', '#表情变体'],
+                annotations: [
+                    { num: 1, x: 50, y: 25, position: 'top', title: '可爱小女孩形象', desc: '圆润脸庞配大眼，灵动治愈' },
+                    { num: 2, x: 75, y: 50, position: 'right', title: '多姿态变体', desc: '帽子款/眼镜款/围巾款等时尚搭配' },
+                    { num: 3, x: 50, y: 75, position: 'bottom', title: '商业周边展示', desc: '胸牌/马克杯/帆布包等品牌延展' }
+                ]
+            }
+        ];
+
+        // 导航高亮
+        function updateNavHighlight() {
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-links a');
+
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (scrollY >= sectionTop - 200) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', updateNavHighlight);
+
+        // 生成作品卡片
+        function createWorkCard(work) {
+            const card = document.createElement('div');
+            card.className = 'work-card';
+            card.innerHTML = '<div class="work-card-glow"></div>';
+            card.onclick = () => window.location.href = `work-detail.html?id=${work.id}`;
+
+            const imageDiv = document.createElement('div');
+            imageDiv.className = 'work-image';
+
+            if (work.image) {
+                // 正常显示的原图
+                const img = document.createElement('img');
+                img.src = work.image;
+                img.alt = work.title;
+                img.dataset.watermarked = 'false';
+                
+                // 带水印的 Canvas（隐藏）
+                const canvas = document.createElement('canvas');
+                canvas.width = 800;
+                canvas.height = 500;
+                const ctx = canvas.getContext('2d');
+
+                // 预加载图片到 Canvas
+                const watermarkImg = new Image();
+                watermarkImg.crossOrigin = 'anonymous';
+                watermarkImg.onload = function () {
+                    ctx.drawImage(watermarkImg, 0, 0, canvas.width, canvas.height);
+                    addWatermark(ctx, canvas.width, canvas.height);
+                };
+                watermarkImg.onerror = function () {
+                    drawPlaceholder(ctx, work);
+                };
+                watermarkImg.src = work.image;
+
+                // 鼠标按下时切换到水印版本
+                img.addEventListener('mousedown', function(e) {
+                    if (e.button === 0) {
+                        switchToWatermarked(img, canvas);
+                    }
+                });
+
+                // 鼠标松开时恢复原图
+                img.addEventListener('mouseup', function() {
+                    switchToOriginal(img, canvas);
+                });
+                
+                img.addEventListener('mouseleave', function() {
+                    switchToOriginal(img, canvas);
+                });
+
+                // 右键时显示水印版本
+                img.addEventListener('contextmenu', function(e) {
+                    e.preventDefault();
+                    switchToWatermarked(img, canvas);
+                    setTimeout(() => switchToOriginal(img, canvas), 100);
+                });
+
+                imageDiv.appendChild(img);
+                imageDiv.appendChild(canvas);
+            } else {
+                // 无图片时使用渐变占位
+                const canvas = document.createElement('canvas');
+                canvas.width = 800;
+                canvas.height = 500;
+                const ctx = canvas.getContext('2d');
+                drawPlaceholder(ctx, work);
+                imageDiv.appendChild(canvas);
+            }
+
+            const tag = document.createElement('span');
+            tag.className = 'work-tag';
+            tag.textContent = work.tag;
+
+            imageDiv.appendChild(tag);
+
+            const content = document.createElement('div');
+            content.className = 'work-content';
+
+            // GitHub 链接
+            const githubLink = work.github ?
+                `<a href="${work.github}" target="_blank" class="work-github" onclick="event.stopPropagation()">
+                    <i class="fab fa-github"></i> 查看源码
+                </a>` : '';
+
+            content.innerHTML = `
+                <h3>${work.title}</h3>
+                <p>${work.description}</p>
+                <div class="work-tech">
+                    ${work.tech.map(t => `<span class="tech-tag">${t}</span>`).join('')}
+                </div>
+                <div class="work-meta">
+                    <span><i class="far fa-calendar"></i> ${work.date}</span>
+                    ${githubLink}
+                </div>
+            `;
+
+            card.appendChild(imageDiv);
+            card.appendChild(content);
+            return card;
+        }
+
+        function drawPlaceholder(ctx, work) {
+            const gradient = ctx.createLinearGradient(0, 0, 800, 500);
+            gradient.addColorStop(0, work.color);
+            gradient.addColorStop(0.5, adjustColor(work.color, -10));
+            gradient.addColorStop(1, '#d7ccc8');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, 800, 500);
+
+            ctx.fillStyle = 'rgba(255,255,255,0.9)';
+            ctx.font = '600 28px Inter, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(work.title, 400, 240);
+
+            ctx.font = '400 16px Inter, sans-serif';
+            ctx.fillStyle = 'rgba(255,255,255,0.7)';
+            ctx.fillText(work.tag, 400, 290);
+            addWatermark(ctx, 800, 500);
+        }
+
+        function adjustColor(hex, amount) {
+            const num = parseInt(hex.replace('#', ''), 16);
+            const r = Math.min(255, Math.max(0, (num >> 16) + amount));
+            const g = Math.min(255, Math.max(0, ((num >> 8) & 0xFF) + amount));
+            const b = Math.min(255, Math.max(0, (num & 0xFF) + amount));
+            return `rgb(${r},${g},${b})`;
+        }
+
+        function addWatermark(ctx, width, height) {
+            ctx.font = WATERMARK_CONFIG.font;
+            ctx.fillStyle = WATERMARK_CONFIG.color;
+            const text = WATERMARK_CONFIG.text;
+            const metrics = ctx.measureText(text);
+            const tw = metrics.width;
+            const th = 20;
+
+            ctx.save();
+            ctx.translate(width / 2, height / 2);
+            ctx.rotate(WATERMARK_CONFIG.angle * Math.PI / 180);
+            ctx.translate(-width / 2, -height / 2);
+
+            for (let y = -width; y < height + th * 2; y += WATERMARK_CONFIG.spacingY) {
+                for (let x = -width; x < width + tw; x += tw + WATERMARK_CONFIG.spacingX) {
+                    ctx.fillText(text, x, y);
+                }
+            }
+            ctx.restore();
+        }
+
+        function switchToWatermarked(img, canvas) {
+            if (img.dataset.watermarked === 'true') return;
+            img.style.opacity = '0';
+            canvas.style.display = 'block';
+            img.dataset.watermarked = 'true';
+        }
+
+        function switchToOriginal(img, canvas) {
+            if (img.dataset.watermarked === 'false') return;
+            img.style.opacity = '1';
+            canvas.style.display = 'none';
+            img.dataset.watermarked = 'false';
+        }
+
+        function showWorkDetail(work) {
+            showNotice(`查看作品: ${work.title}`);
+            // 可以在这里扩展详情弹窗
+        }
+
+        function showNotice(text) {
+            const notice = document.getElementById('watermarkNotice');
+            document.getElementById('noticeText').textContent = text;
+            notice.classList.add('show');
+            setTimeout(() => notice.classList.remove('show'), 3000);
+        }
+
+        function handleSubmit(e) {
+            e.preventDefault();
+            showNotice('消息已发送！');
+            e.target.reset();
+        }
+
+        // 分类筛选
+        let currentCategory = 'all';
+        let currentSearch = '';
+
+        function setCategory(category) {
+            currentCategory = category;
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.category === category);
+            });
+            filterWorks();
+        }
+
+        function filterWorks() {
+            currentSearch = document.getElementById('searchInput').value.toLowerCase();
+            const grid = document.getElementById('worksGrid');
+            const empty = document.getElementById('worksEmpty');
+
+            grid.innerHTML = '';
+
+            const filtered = worksData.filter(work => {
+                const matchCategory = currentCategory === 'all' || work.category === currentCategory;
+                const matchSearch = work.title.toLowerCase().includes(currentSearch) ||
+                    work.description.toLowerCase().includes(currentSearch) ||
+                    work.tag.toLowerCase().includes(currentSearch);
+                return matchCategory && matchSearch;
+            });
+
+            if (filtered.length === 0) {
+                empty.style.display = 'block';
+            } else {
+                empty.style.display = 'none';
+                filtered.forEach(work => {
+                    grid.appendChild(createWorkCard(work));
+                });
+                // 筛选后重新绑定3D效果
+                setTimeout(add3DCardEffect, 50);
+            }
+        }
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            filterWorks();
+            typeWriter();
+            handleScrollAnimations();
+            checkStatsVisibility();
+
+            // 延迟添加3D效果，确保卡片已创建
+            setTimeout(add3DCardEffect, 100);
+        });
+
+        // 滚动事件
+        window.addEventListener('scroll', () => {
+            updateNavHighlight();
+            handleScrollAnimations();
+            checkStatsVisibility();
+        });
+    </script>
+</body>
+
+</html>

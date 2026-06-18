@@ -1,0 +1,2739 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>作品详情 - Ginyo by Margerat</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4db6ac;
+            --primary-dark: #26a69a;
+            --primary-light: #80cbc4;
+            --secondary: #e0f2f1;
+            --bg-main: #faf8f5;
+            --bg-card: #ffffff;
+            --bg-nav: rgba(250, 248, 245, 0.95);
+            --text-primary: #3e2723;
+            --text-secondary: #5d4037;
+            --text-light: #8d6e63;
+            --border: #e8e0d8;
+            --shadow: rgba(62, 39, 35, 0.08);
+            --accent: #26a69a;
+            --warm-primary: #a1887f;
+            --warm-light: #d7ccc8;
+            --warm-bg: #efebe9;
+            --cream: #f5f0eb;
+            --gradient-warm: linear-gradient(135deg, #4db6ac 0%, #80cbc4 50%, #b2dfdb 100%);
+            --gradient-cream: linear-gradient(135deg, #f5f0eb 0%, #efebe9 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-main);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* ========== 导航栏 ========== */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 1.25rem 3rem;
+            background: var(--bg-nav);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: var(--primary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--text-primary);
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        .nav-social {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .nav-social a {
+            color: var(--text-light);
+            font-size: 1rem;
+            transition: color 0.3s;
+        }
+
+        .nav-social a:hover {
+            color: var(--primary);
+        }
+
+        /* ========== 详情页主体 ========== */
+        .detail-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 8rem 2.5rem 4rem;
+        }
+
+        /* 返回按钮 */
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 2rem;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .back-button:hover {
+            color: var(--primary);
+            transform: translateX(-4px);
+        }
+
+        /* 作品封面区域 */
+        .work-cover-wrapper {
+            position: relative;
+            margin-bottom: 3rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 60vh;
+        }
+
+        .work-cover {
+            position: relative;
+            width: auto;
+            max-width: 100%;
+            max-height: 80vh;
+            border-radius: 1.5rem;
+            overflow: visible;
+            box-shadow: 0 20px 60px rgba(212, 132, 124, 0.15);
+            background: var(--bg-card);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .work-cover img,
+        .work-cover canvas,
+        .work-cover .work-cover-img {
+            max-width: 100%;
+            max-height: 80vh;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            display: block;
+            border-radius: 1.5rem;
+        }
+
+        .work-cover .cover-placeholder {
+            width: 100%;
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: rgba(255,255,255,0.9);
+            font-weight: 600;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        }
+
+        /* 手绘标注样式 */
+        .sketch-annotations {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .sketch-annotation {
+            position: absolute;
+            pointer-events: auto;
+            cursor: pointer;
+        }
+
+        .annotation-point {
+            width: 36px;
+            height: 36px;
+            background: var(--primary);
+            border: 3px solid white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 14px;
+            box-shadow: 0 4px 15px rgba(212, 132, 124, 0.4);
+            transition: all 0.3s;
+            animation: pulse 2s infinite;
+        }
+
+        .annotation-point:hover {
+            transform: scale(1.2);
+            background: var(--primary-dark);
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 4px 15px rgba(212, 132, 124, 0.4); }
+            50% { box-shadow: 0 4px 25px rgba(212, 132, 124, 0.6); }
+        }
+
+        /* 手绘箭头SVG */
+        .sketch-arrow {
+            position: absolute;
+            width: 120px;
+            height: 60px;
+            overflow: visible;
+        }
+
+        .sketch-arrow path {
+            fill: none;
+            stroke: var(--primary);
+            stroke-width: 3;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-dasharray: 200;
+            stroke-dashoffset: 200;
+            animation: drawArrow 1s ease forwards;
+        }
+
+        .sketch-arrow circle {
+            fill: var(--primary);
+        }
+
+        @keyframes drawArrow {
+            to { stroke-dashoffset: 0; }
+        }
+
+        /* 标注气泡 */
+        .annotation-bubble {
+            position: absolute;
+            background: white;
+            padding: 12px 16px;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            width: 200px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            z-index: 100;
+            border: 2px solid var(--primary);
+        }
+
+        .annotation-bubble::before {
+            content: '';
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: white;
+            border-left: 2px solid var(--primary);
+            border-bottom: 2px solid var(--primary);
+            transform: rotate(-45deg);
+        }
+
+        .annotation-bubble.left::before {
+            right: -8px;
+            top: 50%;
+            margin-top: -6px;
+            transform: rotate(-45deg);
+        }
+
+        .annotation-bubble.right::before {
+            left: -8px;
+            top: 50%;
+            margin-top: -6px;
+            transform: rotate(135deg);
+        }
+
+        .annotation-bubble.top::before {
+            left: 50%;
+            bottom: -8px;
+            margin-left: -6px;
+            transform: rotate(-135deg);
+        }
+
+        .annotation-bubble.bottom::before {
+            left: 50%;
+            top: -8px;
+            margin-left: -6px;
+            transform: rotate(45deg);
+        }
+
+        .sketch-annotation:hover .annotation-bubble,
+        .sketch-annotation.active .annotation-bubble {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .annotation-bubble h5 {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 4px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .annotation-bubble p {
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* 标注说明区域 */
+        .annotation-legend {
+            background: var(--bg-card);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            border: 1px solid var(--border);
+            width: 100%;
+        }
+
+        .annotation-legend-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .annotation-legend-title i {
+            color: var(--primary);
+        }
+
+        .annotation-legend-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 0.75rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            transition: background 0.3s;
+            background: var(--bg-main);
+        }
+
+        .legend-item:hover {
+            background: var(--bg-main);
+        }
+
+        .legend-number {
+            width: 28px;
+            height: 28px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+
+        .legend-text {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        /* 作品头部信息 */
+        .work-header {
+            margin-bottom: 3rem;
+        }
+
+        .work-tag {
+            display: inline-block;
+            padding: 0.4rem 1rem;
+            background: linear-gradient(135deg, rgba(212, 132, 124, 0.15), rgba(245, 208, 197, 0.15));
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .work-title {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .work-meta {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 1.5rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .work-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .work-meta .github-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.5rem 1rem;
+            background: var(--bg-card);
+            border: 1.5px solid var(--border);
+            border-radius: 50px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .work-meta .github-link:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        /* 作品描述 */
+        .work-section {
+            background: linear-gradient(135deg, var(--bg-card) 0%, var(--cream) 100%);
+            border-radius: 1.5rem;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border);
+        }
+
+        .work-section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .work-section-title i {
+            color: var(--primary);
+        }
+
+        .work-description {
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+            line-height: 1.9;
+        }
+
+        /* 技术栈 */
+        .tech-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .tech-item {
+            padding: 0.6rem 1.2rem;
+            background: var(--bg-main);
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .tech-item:hover {
+            border-color: var(--primary);
+            background: linear-gradient(135deg, rgba(77, 182, 172, 0.08), rgba(161, 136, 127, 0.05));
+            color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        /* 功能特点 */
+        .feature-list {
+            list-style: none;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .feature-item:last-child {
+            border-bottom: none;
+        }
+
+        .feature-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-light), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+
+        .feature-text {
+            flex: 1;
+        }
+
+        .feature-text strong {
+            display: block;
+            color: var(--text-primary);
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .feature-text span {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* 设计详情区域 */
+        .design-section {
+            margin-bottom: 2rem;
+        }
+
+        .design-section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .design-section-header h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .design-section-header i {
+            color: var(--primary);
+            font-size: 1rem;
+        }
+
+        .design-section-content {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            line-height: 1.9;
+            padding-left: 1.5rem;
+        }
+
+        /* 设计信息标签 */
+        .design-info-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            padding: 1.25rem 1.5rem;
+            background: var(--bg-main);
+            border-radius: 1rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border);
+        }
+
+        .design-info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .design-info-label {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .design-info-value {
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        /* 设计理念 */
+        .design-concept {
+            font-size: 1.1rem;
+            color: var(--text-primary);
+            line-height: 1.8;
+            font-style: italic;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, rgba(77, 182, 172, 0.08), rgba(161, 136, 127, 0.08));
+            border-radius: 1rem;
+            border-left: 4px solid var(--primary);
+            margin-bottom: 1.5rem;
+        }
+
+        /* 配色方案 */
+        .color-palette {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        .color-swatch {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .color-swatch:hover {
+            transform: scale(1.15);
+        }
+
+        .color-swatch::after {
+            content: attr(data-color);
+            position: absolute;
+            bottom: -24px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.65rem;
+            color: var(--text-light);
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .color-swatch:hover::after {
+            opacity: 1;
+        }
+
+        /* 关键词 */
+        .keyword-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .keyword-tag {
+            padding: 0.5rem 1rem;
+            background: var(--bg-main);
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .keyword-tag:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Web作品设计亮点 */
+        .design-goals {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .design-goal-item {
+            background: var(--bg-main);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 1.25rem;
+            transition: all 0.3s;
+        }
+
+        .design-goal-item:hover {
+            border-color: var(--primary-light);
+            transform: translateY(-2px);
+        }
+
+        .design-goal-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .design-goal-title i {
+            font-size: 0.85rem;
+        }
+
+        .design-goal-desc {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .design-highlights {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .design-highlight-item {
+            background: var(--bg-main);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+        }
+
+        .design-highlight-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .design-highlight-num {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            font-weight: 700;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .design-highlight-title {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .design-highlight-content {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .project-results {
+            background: linear-gradient(135deg, rgba(77, 182, 172, 0.08), rgba(161, 136, 127, 0.08));
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            border: 1px solid var(--border);
+        }
+
+        .project-results h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .project-results h4 i {
+            color: var(--primary);
+        }
+
+        .project-results ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .project-results li {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .project-results li::before {
+            content: '✓';
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .project-gains {
+            margin-top: 1.5rem;
+        }
+
+        .project-gains h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .project-gains h4 i {
+            color: var(--primary);
+        }
+
+        .gains-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .gain-item {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            padding: 0.75rem 1rem;
+            background: var(--bg-main);
+            border-radius: 0.5rem;
+            border-left: 3px solid var(--primary);
+        }
+
+        /* 操作按钮 */
+        .work-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.875rem 1.75rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(212, 132, 124, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-primary);
+            border: 1.5px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        /* 其他作品推荐 */
+        .more-works {
+            margin-top: 4rem;
+            padding-top: 3rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .more-works-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+        }
+
+        .more-works-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .more-work-card {
+            background: var(--bg-card);
+            border-radius: 1rem;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .more-work-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px var(--shadow);
+        }
+
+        .more-work-image {
+            width: 100%;
+            aspect-ratio: 16/10;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .more-work-image canvas {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .more-work-tag {
+            position: absolute;
+            top: 0.75rem;
+            left: 0.75rem;
+            padding: 0.3rem 0.75rem;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .more-work-fallback {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255,255,255,0.4);
+            font-size: 2rem;
+        }
+
+        .more-works-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .more-works-search {
+            flex: 1;
+            min-width: 200px;
+            max-width: 320px;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .more-works-search i {
+            position: absolute;
+            left: 1rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .more-works-search input {
+            width: 100%;
+            padding: 0.6rem 1rem 0.6rem 2.5rem;
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            background: var(--bg-card);
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .more-works-search input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(77, 182, 172, 0.15);
+        }
+
+        .more-works-filter {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .more-works-filter .filter-btn {
+            padding: 0.5rem 1.2rem;
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .more-works-filter .filter-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .more-works-filter .filter-btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        .more-works-empty {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--text-secondary);
+        }
+
+        .more-works-empty i {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .more-work-info {
+            padding: 1rem;
+        }
+
+        .more-work-info h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .more-work-info p {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* 提示 */
+        .watermark-notice {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--bg-card);
+            border: 1px solid var(--primary);
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1500;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            box-shadow: 0 4px 20px rgba(212, 132, 124, 0.2);
+        }
+
+        .watermark-notice.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .watermark-notice i {
+            color: var(--primary);
+        }
+
+        /* 轮播图 */
+        .carousel-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .carousel-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .carousel-title i {
+            color: var(--primary);
+        }
+
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            border-radius: 1.5rem;
+            overflow: hidden;
+            background: var(--bg-card);
+            box-shadow: 0 20px 60px rgba(212, 132, 124, 0.15);
+        }
+
+        .carousel-wrapper {
+            display: flex;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .carousel-slide {
+            min-width: 100%;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .carousel-screen {
+            width: 100%;
+            max-width: 600px;
+            aspect-ratio: 16/10;
+            border-radius: 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .carousel-screen:hover {
+            transform: scale(1.02);
+        }
+
+        .carousel-screen i {
+            font-size: 4rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 1rem;
+        }
+
+        .carousel-screen-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.95);
+            text-align: center;
+        }
+
+        .carousel-screen::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 60%;
+            background: linear-gradient(to top, rgba(0,0,0,0.3), transparent);
+            pointer-events: none;
+        }
+
+        /* 真实图片轮播样式 */
+        .carousel-image {
+            width: 100%;
+            max-width: 1000px;
+            max-height: 600px;
+            object-fit: contain;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .carousel-screen-fallback {
+            width: 100%;
+            max-width: 600px;
+            aspect-ratio: 16/10;
+            border-radius: 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .carousel-image-desc {
+            display: none;
+        }
+
+        .carousel-thumbnail-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: inherit;
+        }
+
+        .carousel-thumbnail-fallback {
+            width: 100%;
+            height: 100%;
+            background: var(--primary);
+            color: white;
+        }
+
+        .carousel-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.95);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            z-index: 10;
+        }
+
+        .carousel-nav:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .carousel-nav.prev {
+            left: 1rem;
+        }
+
+        .carousel-nav.next {
+            right: 1rem;
+        }
+
+        .carousel-dots {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem 0 0.5rem;
+        }
+
+        .carousel-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--border);
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            padding: 0;
+        }
+
+        .carousel-dot:hover {
+            background: var(--primary-light);
+        }
+
+        .carousel-dot.active {
+            background: var(--primary);
+            width: 28px;
+            border-radius: 5px;
+        }
+
+        .carousel-thumbnails {
+            display: flex;
+            gap: 0.5rem;
+            padding: 0 1rem 0.75rem;
+            overflow-x: auto;
+            scrollbar-width: thin;
+        }
+
+        .carousel-thumbnails::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .carousel-thumbnails::-webkit-scrollbar-track {
+            background: var(--border);
+            border-radius: 2px;
+        }
+
+        .carousel-thumbnails::-webkit-scrollbar-thumb {
+            background: var(--primary-light);
+            border-radius: 2px;
+        }
+
+        .carousel-thumbnail {
+            min-width: 100px;
+            height: 65px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 3px solid transparent;
+            flex-shrink: 0;
+            overflow: hidden;
+            padding: 0;
+            position: relative;
+        }
+
+        .carousel-thumbnail:hover {
+            transform: scale(1.05);
+        }
+
+        .carousel-thumbnail.active {
+            border-color: var(--primary);
+            box-shadow: 0 4px 15px rgba(212, 132, 124, 0.3);
+        }
+
+        .carousel-thumbnail i {
+            font-size: 1.25rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .carousel-thumbnail-title {
+            font-size: 0.6rem;
+            color: rgba(255, 255, 255, 0.9);
+            text-align: center;
+            margin-top: 0.15rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 95%;
+            line-height: 1.2;
+        }
+
+        /* 加载状态 */
+        .loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 60vh;
+            text-align: center;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 1rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading p {
+            color: var(--text-secondary);
+        }
+
+        /* 页脚 */
+        footer {
+            padding: 2rem 3rem;
+            background: var(--bg-main);
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 4rem;
+        }
+
+        footer p {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        /* ========== 响应式 ========== */
+        @media (max-width: 968px) {
+            nav {
+                padding: 1rem 1.5rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .detail-container {
+                padding: 7rem 1rem 2rem;
+            }
+
+            .work-cover {
+                max-height: 60vh;
+                border-radius: 1rem;
+            }
+
+            .work-cover img {
+                max-height: 60vh;
+            }
+
+            .work-section {
+                padding: 1.5rem;
+            }
+
+            .work-meta {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.75rem;
+            }
+
+            .more-works-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .work-actions {
+                flex-direction: column;
+            }
+
+            .work-actions .btn {
+                width: 100%;
+            }
+
+            footer {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            /* 移动端适配 */
+            .design-goals {
+                grid-template-columns: 1fr;
+            }
+
+            .carousel-nav {
+                width: 36px;
+                height: 36px;
+            }
+
+            .carousel-thumbnails {
+                justify-content: flex-start;
+            }
+
+            .carousel-thumbnail {
+                min-width: 80px;
+                height: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav>
+        <a href="index.html" class="logo">Ginyo <span>by Margerat</span></a>
+        <ul class="nav-links">
+            <li><a href="index.html">首页</a></li>
+            <li><a href="index.html#about">关于</a></li>
+            <li><a href="index.html#works" class="active">作品</a></li>
+            <li><a href="index.html#contact">联系</a></li>
+        </ul>
+        <div class="nav-social">
+            <a href="https://github.com/Pearl-Yang" target="_blank"><i class="fab fa-github"></i></a>
+            <a href="https://xhslink.com/m/2i0EIVzHCua" target="_blank"><i class="fas fa-heart"></i></a>
+        </div>
+    </nav>
+
+    <!-- 加载状态 -->
+    <div class="loading" id="loadingState">
+        <div class="loading-spinner"></div>
+        <p>加载中...</p>
+    </div>
+
+    <!-- 详情内容 -->
+    <div class="detail-container" id="detailContent" style="display: none;">
+        <!-- 返回按钮 -->
+        <a href="index.html#works" class="back-button">
+            <i class="fas fa-arrow-left"></i>
+            返回作品集
+        </a>
+
+        <!-- 作品封面 -->
+        <div class="work-cover-wrapper">
+            <div class="work-cover" id="workCover"></div>
+            <div class="sketch-annotations" id="sketchAnnotations"></div>
+        </div>
+
+        <!-- 轮播图区域（仅Web类作品显示） -->
+        <div class="carousel-section" id="carouselSection" style="display: none;">
+            <h3 class="carousel-title">
+                <i class="fas fa-images"></i>
+                界面预览
+            </h3>
+            <div class="carousel-container">
+                <div class="carousel-wrapper" id="carouselWrapper"></div>
+                <button class="carousel-nav prev" id="carouselPrev">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="carousel-nav next" id="carouselNext">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+            <div class="carousel-dots" id="carouselDots"></div>
+            <div class="carousel-thumbnails" id="carouselThumbnails"></div>
+        </div>
+
+        <!-- 作品头部 -->
+        <div class="work-header">
+            <span class="work-tag" id="workTag"></span>
+            <h1 class="work-title" id="workTitle"></h1>
+            <div class="work-meta" id="workMeta"></div>
+        </div>
+
+        <!-- 作品描述 -->
+        <div class="work-section">
+            <h3 class="work-section-title">
+                <i class="fas fa-file-alt"></i>
+                项目介绍
+            </h3>
+            <p class="work-description" id="workDescription"></p>
+        </div>
+
+        <!-- 技术栈 -->
+        <div class="work-section">
+            <h3 class="work-section-title">
+                <i class="fas fa-code"></i>
+                技术栈
+            </h3>
+            <div class="tech-list" id="techList"></div>
+        </div>
+
+        <!-- 项目角色（仅Web类作品显示） -->
+        <div class="work-section" id="roleSection" style="display: none;">
+            <h3 class="work-section-title">
+                <i class="fas fa-user-tie"></i>
+                项目角色
+            </h3>
+            <p id="roleText" class="work-description"></p>
+        </div>
+
+        <!-- 项目背景（仅Web类作品显示） -->
+        <div class="work-section" id="backgroundSectionWeb" style="display: none;">
+            <h3 class="work-section-title">
+                <i class="fas fa-info-circle"></i>
+                项目背景
+            </h3>
+            <p id="backgroundText" class="work-description"></p>
+        </div>
+
+        <!-- 设计目标（仅Web类作品显示） -->
+        <div class="work-section" id="designGoalsSection" style="display: none;">
+            <h3 class="work-section-title">
+                <i class="fas fa-bullseye"></i>
+                设计目标
+            </h3>
+            <div class="design-goals" id="designGoals"></div>
+        </div>
+
+        <!-- 设计亮点（仅Web类作品显示） -->
+        <div class="work-section" id="designHighlightsSection" style="display: none;">
+            <h3 class="work-section-title">
+                <i class="fas fa-star"></i>
+                设计亮点
+            </h3>
+            <div class="design-highlights" id="designHighlights"></div>
+        </div>
+
+        <!-- 项目成果（仅Web类作品显示） -->
+        <div class="work-section" id="resultsSection" style="display: none;">
+            <h3 class="work-section-title">
+                <i class="fas fa-trophy"></i>
+                项目成果
+            </h3>
+            <div class="project-results" id="projectResults"></div>
+        </div>
+
+        <!-- 项目收获（仅Web类作品显示） -->
+        <div class="work-section" id="gainsSection" style="display: none;">
+            <div class="project-gains">
+                <h4><i class="fas fa-lightbulb"></i> 项目收获</h4>
+                <div class="gains-list" id="projectGains"></div>
+            </div>
+        </div>
+
+        <!-- 设计详情（仅设计类作品显示） -->
+        <div class="work-section" id="designSection" style="display: none;">
+            <!-- 项目背景 -->
+            <div class="design-section" id="backgroundSection">
+                <div class="design-section-header">
+                    <i class="fas fa-info-circle"></i>
+                    <h4>项目背景</h4>
+                </div>
+                <p class="design-section-content" id="backgroundContent"></p>
+            </div>
+
+            <!-- 设计理念 -->
+            <div class="design-section">
+                <div class="design-section-header">
+                    <i class="fas fa-lightbulb"></i>
+                    <h4>设计理念</h4>
+                </div>
+                <p class="design-concept" id="designConcept"></p>
+            </div>
+
+            <!-- 设计信息栏 -->
+            <div class="design-info-bar" id="designInfoBar"></div>
+
+            <!-- 配色方案 -->
+            <div class="design-section">
+                <div class="design-section-header">
+                    <i class="fas fa-palette"></i>
+                    <h4>配色方案</h4>
+                </div>
+                <div class="color-palette" id="colorPalette"></div>
+            </div>
+
+            <!-- 设计说明 -->
+            <div class="design-section">
+                <div class="design-section-header">
+                    <i class="fas fa-pen-fancy"></i>
+                    <h4>设计说明</h4>
+                </div>
+                <p class="design-section-content" id="designDescription"></p>
+            </div>
+
+            <!-- 关键词 -->
+            <div class="design-section">
+                <div class="design-section-header">
+                    <i class="fas fa-tags"></i>
+                    <h4>关键词</h4>
+                </div>
+                <div class="keyword-tags" id="keywordTags"></div>
+            </div>
+        </div>
+
+        <!-- 功能特点 -->
+        <div class="work-section" id="featuresSection">
+            <h3 class="work-section-title">
+                <i class="fas fa-star"></i>
+                功能特点
+            </h3>
+            <ul class="feature-list" id="featureList"></ul>
+        </div>
+
+        <!-- 操作按钮 -->
+        <div class="work-actions" id="workActions"></div>
+
+        <!-- 更多作品 -->
+        <div class="more-works" id="moreWorks">
+            <h3 class="more-works-title">更多作品</h3>
+            <div class="more-works-toolbar">
+                <div class="more-works-search">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="moreWorksSearch" placeholder="搜索其他作品..." oninput="filterMoreWorks()">
+                </div>
+                <div class="more-works-filter">
+                    <button class="filter-btn active" data-category="all" onclick="setMoreWorksCategory('all')">全部</button>
+                    <button class="filter-btn" data-category="web" onclick="setMoreWorksCategory('web')">Web开发</button>
+                    <button class="filter-btn" data-category="design" onclick="setMoreWorksCategory('design')">PS设计</button>
+                </div>
+            </div>
+            <div class="more-works-grid" id="moreWorksGrid"></div>
+            <div class="more-works-empty" id="moreWorksEmpty" style="display: none;">
+                <i class="fas fa-search"></i>
+                <p>没有找到匹配的作品</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 提示 -->
+    <div class="watermark-notice" id="watermarkNotice">
+        <i class="fas fa-info-circle"></i>
+        <span id="noticeText"></span>
+    </div>
+
+    <!-- 页脚 -->
+    <footer id="pageFooter" style="display: none;">
+        <p>&copy; 2026 Ginyo by Margerat. All rights reserved.</p>
+        <p>小红书获赞 4846+ | 持续创作中</p>
+    </footer>
+
+    <script>
+        // 水印配置
+        const WATERMARK_CONFIG = {
+            text: '© Ginyo by Margerat',
+            font: '14px Inter, sans-serif',
+            color: 'rgba(212, 132, 124, 0.1)',
+            spacingX: 180,
+            spacingY: 100,
+            angle: -25
+        };
+
+        // 作品数据（与首页保持一致）
+        const worksData = [
+            {
+                id: 1,
+                title: '上大学Online — 校园综合服务平台',
+                tag: 'UI/UX设计 + 前端实现',
+                description: '针对高校学生多平台切换办理业务的痛点，打造网页端+微信小程序端一体化校园服务平台，实现"一校一集合、一人一身份、一站全服务"。',
+                color: '#d4847c',
+                coverImage: 'images/online_UN/屏幕截图_2-12-2025_15352_ggbond-zhuzhu.github.io.jpeg',
+                date: '2025.06 - 至今',
+                category: 'web',
+                github: 'https://github.com/Pearl-Yang/online_UN',
+                role: '项目负责人 / UI设计师 / 前端开发',
+                tech: ['Vue3', 'HTML5', 'CSS3', 'JavaScript'],
+                tools: ['Figma', 'Axure', '墨刀', 'Photoshop', 'Illustrator'],
+                background: '针对高校学生多平台切换办理业务的痛点，打造网页端+微信小程序端一体化校园服务平台。项目以"高校官方注册封装用户群体"为核心，构建基础功能+高校定制功能的模块化平台，服务高校师生、商家、兼职留学生等多角色用户。',
+                designGoals: [
+                    { title: '整合服务', desc: '将分散的校园服务整合到一个平台，减少用户多平台切换成本' },
+                    { title: '降低门槛', desc: '优化信息层级与操作路径，降低新生使用门槛' },
+                    { title: '统一体验', desc: '建立模块化组件库，保证多端视觉统一与交互一致性' },
+                    { title: '高效开发', desc: '通过设计系统提升团队协作与开发效率' }
+                ],
+                designHighlights: [
+                    {
+                        title: '信息架构设计',
+                        content: '梳理校园12类核心服务场景，构建清晰的信息层级。采用模块化设计，支持不同高校的功能定制与扩展。降低用户操作步骤30%，提升使用效率。'
+                    },
+                    {
+                        title: '设计系统搭建',
+                        content: '建立包含40+通用组件的模块化组件库。统一色彩规范、字体规范、间距规范、交互规范。支持Web端与小程序端多端适配，提升团队开发效率40%。'
+                    },
+                    {
+                        title: '多角色体验设计',
+                        content: '针对学生、商家、管理员等不同角色设计差异化界面。兼顾功能完整性与操作简洁性的平衡。适配PC/H5/小程序多终端使用场景。'
+                    },
+                    {
+                        title: '从设计到落地',
+                        content: '独立完成从需求分析→原型设计→视觉设计→前端实现的全链路。协同开发完成产品从0到1落地，核心功能迭代按期交付率100%。确保设计还原度，实现设计与开发的高效协作。'
+                    }
+                ],
+                screenshots: [
+                    { title: '服务分类', src: 'images/online_UN/屏幕截图 2026-06-19 051522.png', desc: '12类校园服务分类导航' },
+                    { title: '快递服务', src: 'images/online_UN/屏幕截图 2026-06-19 051541.png', desc: '校园快递代取服务' },
+                    { title: '二手市场', src: 'images/online_UN/屏幕截图 2026-06-19 051604.png', desc: '闲置物品交易平台' },
+                    { title: '失物招领', src: 'images/online_UN/屏幕截图 2026-06-19 051738.png', desc: '失物招领信息发布' },
+                    { title: '信息发布', src: 'images/online_UN/屏幕截图 2026-06-19 051757.png', desc: '校园信息分类发布' },
+                    { title: '服务详情', src: 'images/online_UN/屏幕截图 2026-06-19 051829.png', desc: '服务详情与预约' },
+                    { title: '任务大厅', src: 'images/online_UN/屏幕截图 2026-06-19 051848.png', desc: '悬赏任务发布与接取' },
+                    { title: '兼职平台', src: 'images/online_UN/屏幕截图 2026-06-19 051902.png', desc: '校园兼职信息聚合' },
+                    { title: '表白墙', src: 'images/online_UN/屏幕截图 2026-06-19 051920.png', desc: '校园表白树洞社区' },
+                    { title: '社区互动', src: 'images/online_UN/屏幕截图 2026-06-19 051951.png', desc: '校园社区话题讨论' },
+                    { title: '排行榜', src: 'images/online_UN/屏幕截图 2026-06-19 052005.png', desc: '用户积分排行榜' },
+                    { title: '个人中心', src: 'images/online_UN/屏幕截图 2026-06-19 052023.png', desc: '用户中心与设置' },
+                    { title: '消息通知', src: 'images/online_UN/屏幕截图 2026-06-19 052052.png', desc: '系统消息推送' },
+                    { title: '鲸益币', src: 'images/online_UN/屏幕截图 2026-06-19 052108.png', desc: '虚拟货币系统' },
+                    { title: '设置页面', src: 'images/online_UN/屏幕截图 2026-06-19 052123.png', desc: '用户偏好设置' },
+                    { title: '其他页面1', src: 'images/online_UN/屏幕截图_2-12-2025_153116_ggbond-zhuzhu.github.io.jpeg', desc: '附加功能展示' },
+                    { title: '其他页面2', src: 'images/online_UN/屏幕截图_2-12-2025_15359_ggbond-zhuzhu.github.io.jpeg', desc: '附加功能展示' },
+                    { title: '其他页面3', src: 'images/online_UN/屏幕截图_2-12-2025_15360_ggbond-zhuzhu.github.io.jpeg', desc: '附加功能展示' }
+                ],
+                results: [
+                    '完成从0到1的产品设计与技术实现',
+                    '建立完整的设计系统与组件库',
+                    '支持多角色、多终端、多场景使用',
+                    '核心功能迭代按期交付率100%',
+                    '用户操作步骤降低30%，开发效率提升40%'
+                ],
+                gains: [
+                    '全链路能力：从需求分析到产品落地的完整项目经验',
+                    '设计+开发：兼具设计思维与前端实现能力，能与开发高效协作',
+                    '复杂业务梳理：擅长将复杂的多角色业务转化为清晰的产品架构',
+                    '项目管理：作为项目负责人，统筹设计与开发进度，保障项目交付'
+                ]
+            },
+            {
+                id: 2,
+                title: 'EcoLaw 生态法治普法平台',
+                tag: 'UI/UX设计 + AI交互',
+                description: '基于AI技术的生态法治互动普法软件，支持小程序、APP、H5多端，含AI法规解读与虚拟宠物养成，让法律学习变得有趣。',
+                color: '#7c9a8a',
+                date: '2025.09 - 至今',
+                category: 'web',
+                github: 'https://github.com/Pearl-Yang/EcoLaw',
+                role: 'UI设计师 / 前端开发',
+                tech: ['Vue3', 'AI NLP', '微信小程序'],
+                tools: ['Figma', '墨刀', 'Photoshop'],
+                background: '针对传统普法形式单一、内容枯燥、用户参与度低的问题，打造基于AI技术的生态法治互动普法平台。通过游戏化机制和AI智能交互，让法律知识的学习变得生动有趣。',
+                designGoals: [
+                    { title: '降低学习门槛', desc: '将复杂的法律法规转化为通俗易懂的内容' },
+                    { title: '提升参与度', desc: '通过游戏化机制提高用户学习积极性' },
+                    { title: '智能交互', desc: 'AI技术提供个性化的法规解读服务' },
+                    { title: '多端覆盖', desc: '支持小程序、APP、H5多端同步使用' }
+                ],
+                designHighlights: [
+                    {
+                        title: 'AI对话界面设计',
+                        content: '设计直观友好的AI对话界面，支持自然语言提问。智能识别用户意图，提供精准的法规解读。聊天记录持久化，方便回顾学习。'
+                    },
+                    {
+                        title: '游戏化激励机制',
+                        content: '虚拟宠物养成系统，学习即可获得宠物经验值。成就徽章体系，激励用户持续学习。积分排行榜，增加用户粘性。'
+                    },
+                    {
+                        title: '知识图谱可视化',
+                        content: '将法规关系以图形化方式呈现，便于理解。采用卡片式信息展示，降低认知负担。交叉引用链接，方便深入学习。'
+                    },
+                    {
+                        title: '适老化考虑',
+                        content: '字体大小可调节，适应不同视力需求。操作流程极简化，降低学习成本。重要信息高亮提示，防止遗漏。'
+                    }
+                ],
+                screenshots: [
+                    { title: '首页', color: '#7c9a8a', icon: 'fa-leaf' },
+                    { title: 'AI对话', color: '#5a7a6a', icon: 'fa-robot' },
+                    { title: '知识库', color: '#9aba9a', icon: 'fa-book' },
+                    { title: '宠物养成', color: '#abcba8', icon: 'fa-paw' }
+                ],
+                results: [
+                    '用户学习时长提升200%',
+                    'AI对话准确率达到85%以上',
+                    '完成3端产品的设计与开发',
+                    '虚拟宠物系统日活跃用户5000+',
+                    '获得用户好评率95%'
+                ],
+                gains: [
+                    'AI交互设计：学习如何设计AI对话产品的用户体验',
+                    '游戏化思维：将学习内容转化为有趣的互动体验',
+                    '多端适配：掌握跨平台设计的核心要点',
+                    '适老化设计：关注不同用户群体的使用体验'
+                ]
+            },
+            {
+                id: 3,
+                title: 'CareMe 智慧养老助手',
+                tag: 'UI/UX设计 + 多语言适配',
+                description: '专为长者打造的AI养老助手，大字极简界面、全语音操作，支持苗语/哈尼语适配，让科技有温度。',
+                color: '#9a8a7c',
+                date: '2025.03 - 至今',
+                category: 'web',
+                github: 'https://github.com/Pearl-Yang/CareMe',
+                role: 'UI设计师 / 前端开发',
+                tech: ['Vue3', '语音交互', '多语言适配'],
+                tools: ['Figma', '墨刀', 'Photoshop'],
+                background: '针对老年群体使用智能设备困难的问题，设计一款大字极简界面的AI养老助手。全语音操作降低学习成本，少数民族语言适配让科技惠及更多人群。',
+                designGoals: [
+                    { title: '大字极简', desc: '专为老年用户设计的高可读性界面' },
+                    { title: '语音交互', desc: '支持语音指令，动动嘴就能完成操作' },
+                    { title: '语言适配', desc: '适配苗语、哈尼语等少数民族语言' },
+                    { title: '情感关怀', desc: '让科技产品有温度，陪伴老年生活' }
+                ],
+                designHighlights: [
+                    {
+                        title: '大字极简界面',
+                        content: '最小字号不小于18px，确保视力不好的用户也能看清。色彩对比度达到WCAG AAA标准。高频操作放在首屏，减少滑动。'
+                    },
+                    {
+                        title: '全语音交互',
+                        content: '支持中英文混合语音指令识别。语音播报重要信息，无需阅读也能获取。语音引导教程，上手更轻松。'
+                    },
+                    {
+                        title: '少数民族语言',
+                        content: '界面支持苗语、哈尼语等少数民族语言。语音合成支持多语言播报。本地化适配，尊重文化差异。'
+                    },
+                    {
+                        title: '情感化设计',
+                        content: 'AI助手有虚拟形象，增加亲切感。智能提醒用药、运动，传递关怀。家人共享功能，远程也能关心父母。'
+                    }
+                ],
+                screenshots: [
+                    { title: '首页', color: '#9a8a7c', icon: 'fa-heart' },
+                    { title: '语音助手', color: '#8a7a6c', icon: 'fa-microphone' },
+                    { title: '健康数据', color: '#baaa9c', icon: 'fa-heartbeat' },
+                    { title: '设置', color: '#d4ccc4', icon: 'fa-cog' }
+                ],
+                results: [
+                    '目标用户满意度达98%',
+                    '老年用户独立使用率提升60%',
+                    '完成3种语言的本地化',
+                    '日活跃老年用户2000+',
+                    '获得家属好评反馈500+条'
+                ],
+                gains: [
+                    '适老化设计能力：深入理解老年用户需求',
+                    '语音交互设计：语音产品的用户体验设计',
+                    '国际化思维：多语言产品的设计经验',
+                    '无障碍设计：包容性设计的实践'
+                ]
+            },
+            {
+                id: 4,
+                title: 'CaseGuardian 检管家',
+                tag: 'UI/UX设计 + 企业级系统',
+                description: '面向检察机关的案件全流程智慧化管理平台，九大功能模块，四层AI融合架构，助力智慧检务建设。',
+                color: '#8a9a7c',
+                coverImage: 'images/CaseGuardian/08-login-page.png',
+                date: '2024.11 - 至今',
+                category: 'web',
+                github: 'https://github.com/Pearl-Yang/CaseGuardian',
+                role: 'UI设计师 / 前端开发',
+                tech: ['Vue3', 'AI', '规则引擎'],
+                tools: ['Figma', 'Axure', 'Visio', 'Photoshop'],
+                background: '面向检察机关的案件全流程智慧化管理平台，整合案件管理、数据分析、报表导出等九大功能模块。采用四层AI融合架构，提升检务工作效率。',
+                designGoals: [
+                    { title: '案件全流程', desc: '从立案到结案全流程数字化追踪管理' },
+                    { title: '智能辅助', desc: 'AI技术辅助案件分析与决策' },
+                    { title: '数据可视化', desc: '多维度数据分析，直观呈现案件态势' },
+                    { title: '安全合规', desc: '严格的权限管理，保障数据安全' }
+                ],
+                designHighlights: [
+                    {
+                        title: '信息架构优化',
+                        content: '梳理检察机关业务流程，优化信息层级。重要信息前置展示，减少查找成本。支持自定义工作台，个性化配置常用功能。'
+                    },
+                    {
+                        title: '四层AI融合',
+                        content: '智能分类：案件自动归类，减少人工判断。智能推荐：相似案例推送，辅助决策。智能预警：风险提前预知，防患于未然。智能分析：数据挖掘洞察，支撑决策。'
+                    },
+                    {
+                        title: '数据可视化',
+                        content: '案件态势大屏，实时掌握工作进展。多维度统计报表，支持导出打印。图表交互联动，深度数据钻取。'
+                    },
+                    {
+                        title: '企业级体验',
+                        content: '权限分级管理，信息安全可控。操作日志审计，责任可追溯。支持批量操作，提升工作效率。离线数据缓存，网络不稳定也能用。'
+                    }
+                ],
+                screenshots: [
+                    { 
+                        title: '数据驾驶舱', 
+                        src: 'images/CaseGuardian/37-data-cockpit.png',
+                        desc: '多维度数据可视化，实时掌握案件态势'
+                    },
+                    { 
+                        title: '个人数据看板', 
+                        src: 'images/CaseGuardian/39-personal-dashboard.png',
+                        desc: '个人工作台，快速处理待办事项'
+                    },
+                    { 
+                        title: '文书录入', 
+                        src: 'images/CaseGuardian/25-document-entry.png',
+                        desc: '智能文书识别，快速录入案件信息'
+                    },
+                    { 
+                        title: '文书编辑', 
+                        src: 'images/CaseGuardian/27-document-edit.png',
+                        desc: '可视化文书制作，模板快速套用'
+                    },
+                    { 
+                        title: '文书对比', 
+                        src: 'images/CaseGuardian/29-document-compare.png',
+                        desc: '文书智能比对，快速定位差异内容'
+                    },
+                    { 
+                        title: '涉案财物管理', 
+                        src: 'images/CaseGuardian/44-payment-match.png',
+                        desc: '财物全流程追踪，到账自动匹配'
+                    },
+                    { 
+                        title: '案件质量评查', 
+                        src: 'images/CaseGuardian/49-case-management-review.png',
+                        desc: 'AI智能评查，三级质量管控体系'
+                    },
+                    { 
+                        title: '多发问题分析', 
+                        src: 'images/CaseGuardian/51-common-problems.png',
+                        desc: '问题汇总分析，辅助决策参考'
+                    },
+                    { 
+                        title: '数字检察政策', 
+                        src: 'images/CaseGuardian/58-digital-prosecution-policy.png',
+                        desc: '政策背景支撑，契合数字检察战略'
+                    }
+                ],
+                results: [
+                    '案件处理效率提升45%',
+                    '覆盖9大功能模块',
+                    '服务检察院客户50+家',
+                    'AI辅助决策准确率92%',
+                    '获得客户优秀评价'
+                ],
+                gains: [
+                    '企业级产品设计：大型复杂系统的用户体验设计',
+                    'AI产品设计：AI能力与业务场景的结合',
+                    '数据可视化：从数据到洞察的设计表达',
+                    '权限系统设计：复杂权限体系的用户体验'
+                ]
+            },
+            {
+                id: 5,
+                title: 'uniapp 上大学Online小程序',
+                tag: 'UI/UX设计 + 小程序开发',
+                description: '上大学Online微信小程序版本，聚合校园服务多功能平台，轻量化设计，即开即用的校园服务体验。',
+                color: '#7c8a9a',
+                date: '2025.08 - 至今',
+                category: 'web',
+                github: 'https://github.com/Pearl-Yang/uniapp_OnlineUN',
+                role: 'UI设计师 / 前端开发',
+                tech: ['uni-app', '微信小程序'],
+                tools: ['Figma', '墨刀', 'Photoshop'],
+                background: '上大学Online微信小程序版本，基于uni-app框架开发。轻量化设计，无需下载即开即用，聚合校园服务多功能，提升学生校园生活便利度。',
+                designGoals: [
+                    { title: '轻量化', desc: '无需下载，即开即用的校园服务小程序' },
+                    { title: '微信生态', desc: '依托微信支付、分享等能力提升体验' },
+                    { title: '快速迭代', desc: '基于uni-app一套代码多端部署' },
+                    { title: '离线可用', desc: '本地数据缓存，网络不佳也能用' }
+                ],
+                designHighlights: [
+                    {
+                        title: '小程序规范设计',
+                        content: '严格遵循微信小程序设计规范。底部TabBar导航，常用功能一键触达。下拉刷新、上拉加载，体验流畅自然。'
+                    },
+                    {
+                        title: '轻量化交互',
+                        content: '页面层级控制在3层以内。图片懒加载，提升首屏速度。骨架屏设计，减少等待焦虑。'
+                    },
+                    {
+                        title: '微信能力融合',
+                        content: '微信一键登录，获取用户信息。微信支付，缴费更便捷。分享卡片，裂变传播。消息订阅，重要通知不遗漏。'
+                    },
+                    {
+                        title: '性能优化',
+                        content: '分包加载，减少主包体积。接口数据缓存，离线也能看。图片压缩，降低流量消耗。预加载技术，切换无感知。'
+                    }
+                ],
+                screenshots: [
+                    { title: '首页', color: '#7c8a9a', icon: 'fa-home' },
+                    { title: '服务分类', color: '#6c7a8a', icon: 'fa-th' },
+                    { title: '搜索', color: '#8c9aaa', icon: 'fa-search' },
+                    { title: '我的', color: '#9caaba', icon: 'fa-user' }
+                ],
+                results: [
+                    '小程序日活用户3000+',
+                    '页面加载速度<1s',
+                    '用户评分4.8星',
+                    '通过微信审核，成功上线',
+                    '学校官方推荐使用'
+                ],
+                gains: [
+                    '小程序设计：微信小程序的设计规范与最佳实践',
+                    '轻量化设计：性能优化与用户体验的平衡',
+                    '跨端开发：uni-app多端适配经验',
+                    '微信生态：微信开放能力的合理运用'
+                ]
+            },
+            {
+                id: 6,
+                title: 'PS 设计作品 - 苹果海报',
+                tag: '海报设计',
+                description: '精心设计的苹果主题商业海报，色彩鲜明吸引眼球',
+                color: '#4db6ac',
+                image: 'images/apple-poster.png',
+                date: '2026.05',
+                category: 'design',
+                github: null,
+                tech: ['Photoshop', '商稿设计'],
+                background: '为水果零售品牌设计的季节性推广海报，旨在通过鲜明的色彩和诱人的食欲感，吸引年轻消费群体的目光，提升品牌在社交媒体上的传播效果。',
+                designConcept: '以"新鲜、健康、自然"为核心理念，通过暖色调营造温馨感，运用光影效果突出苹果的立体质感，让观者产生强烈的购买欲望。',
+                palette: ['#4db6ac', '#80cbc4', '#b2dfdb', '#26a69a', '#009688', '#e0f2f1'],
+                designCategory: '海报设计',
+                designDescription: '采用中心构图方式，将苹果置于视觉焦点，配合渐变背景营造层次感。运用高光与阴影的对比突出果实的光泽度，文字排版简洁有力，层次分明。通过暖色调的统一运用，强化品牌的亲和力与产品的食欲感。',
+                keywords: ['#食欲感', '#暖色调', '#商业摄影', '#质感', '#季节营销'],
+                annotations: [
+                    { num: 1, x: 50, y: 35, position: 'left', title: '食欲感光效', desc: '通过高光与渐变营造苹果的立体质感，激发食欲' },
+                    { num: 2, x: 75, y: 50, position: 'right', title: '渐变背景', desc: '温暖的渐变色彩营造层次感与温馨氛围' },
+                    { num: 3, x: 30, y: 70, position: 'left', title: '品牌调性', desc: '统一暖色调强化品牌亲和力' }
+                ]
+            },
+            {
+                id: 7,
+                title: 'PS 设计作品 - 小雏菊',
+                tag: '品牌视觉',
+                description: '清新自然的小雏菊主题视觉设计，简约优雅',
+                color: '#4db6ac',
+                image: 'images/daisy.png',
+                date: '2026.05',
+                category: 'design',
+                github: null,
+                tech: ['Photoshop', '商稿设计'],
+                background: '为花店品牌设计的视觉形象素材，适用于包装设计、名片及社交媒体配图。目标用户为追求生活品质、喜爱自然风格的都市年轻女性。',
+                designConcept: '追求"简约而不简单"的设计理念，以小雏菊为核心元素，通过留白与色彩搭配传递清新、自然、治愈的品牌调性。',
+                palette: ['#4db6ac', '#80cbc4', '#b2dfdb', '#26a69a', '#e0f2f1', '#ffffff'],
+                designCategory: '品牌视觉',
+                designDescription: '整体风格追求极简美学，以大面积留白突出小雏菊的柔美姿态。花瓣采用渐变处理，层次分明而不失轻盈感。配色以绿色和白色为主调，点缀淡黄色花蕊，呼应自然主题。边框处理采用圆角设计，增添柔和亲切感。',
+                keywords: ['#简约', '#自然', '#留白', '#小清新', '#治愈系'],
+                annotations: [
+                    { num: 1, x: 50, y: 40, position: 'top', title: '渐变花瓣', desc: '柔和渐变处理，花瓣层次分明轻盈柔美' },
+                    { num: 2, x: 70, y: 60, position: 'right', title: '自然留白', desc: '大面积留白突出主体，简约而不简单' },
+                    { num: 3, x: 25, y: 55, position: 'left', title: '治愈配色', desc: '绿色与白色主调配淡黄花蕊，呼应自然' }
+                ]
+            },
+            {
+                id: 8,
+                title: 'PS 设计作品 - 三角洲陪玩电竞',
+                tag: '海报设计',
+                description: '动感炫酷的电竞主题宣传海报，年轻人的游戏风格',
+                color: '#546e7a',
+                image: 'images/esports-poster.png',
+                date: '2026.03',
+                category: 'design',
+                github: null,
+                tech: ['Photoshop', '电竞设计'],
+                background: '为电竞陪玩平台设计的宣传海报，目标是吸引18-25岁的年轻游戏玩家群体，需要在视觉上体现专业性与潮流感的平衡。',
+                designConcept: '融合"科技感"与"年轻化"两大元素，通过霓虹光效和动态构图营造强烈的视觉冲击力，传递"专业陪玩、快乐游戏"的品牌理念。',
+                palette: ['#546e7a', '#78909c', '#90a4ae', '#37474f', '#263238', '#eceff1'],
+                designCategory: '海报设计',
+                designDescription: '采用深色背景搭配霓虹光效的设计手法，营造沉浸式的电竞氛围。几何图形的堆叠与光效线条的运用，增强画面的科技感与未来感。人物剪影与光效的结合，暗示陪玩服务的专业性。整体构图动感十足，符合年轻玩家的审美偏好。',
+                keywords: ['#电竞', '#科技感', '#霓虹', '#动效', '#年轻化'],
+                annotations: [
+                    { num: 1, x: 35, y: 30, position: 'top', title: '霓虹光效', desc: '深色背景搭配炫彩霓虹，营造电竞氛围' },
+                    { num: 2, x: 65, y: 45, position: 'right', title: '几何图形', desc: '科技感几何堆叠，增强未来感' },
+                    { num: 3, x: 50, y: 70, position: 'bottom', title: '动感构图', desc: '动态线条引导视觉，年轻人风格' }
+                ]
+            },
+            {
+                id: 9,
+                title: 'PS 设计作品 - 荔枝磨砂质感海报',
+                tag: '海报设计',
+                description: '高级磨砂质感风格的荔枝主题海报，现代轻奢设计',
+                color: '#9a6a7c',
+                image: 'images/lychee-poster.png',
+                date: '2026.02',
+                category: 'design',
+                github: null,
+                tech: ['Photoshop', '商稿设计'],
+                background: '为高端水果品牌设计的轻奢风格海报，目标用户为追求品质生活的中高消费群体，需要体现产品的高端定位与精致格调。',
+                designConcept: '以"轻奢、精致、格调"为核心，通过磨砂质感与莫兰迪色调的运用，打造高级感满满的视觉体验，让普通的水果也能呈现出艺术品般的质感。',
+                palette: ['#4db6ac', '#80cbc4', '#b2dfdb', '#26a69a', '#e0f2f1', '#f5faf9'],
+                designCategory: '海报设计',
+                designDescription: '整体采用低饱和度的莫兰迪配色，营造温柔优雅的视觉感受。磨砂质感是该设计的亮点，通过颗粒感与柔焦效果的结合，赋予画面独特的触感联想。荔枝果实的光泽与磨砂背景形成对比，层次分明。文字采用细体字设计，与整体的精致感相呼应。',
+                keywords: ['#轻奢', '#磨砂质感', '#莫兰迪', '#高级感', '#精致'],
+                annotations: [
+                    { num: 1, x: 50, y: 35, position: 'top', title: '磨砂质感', desc: '颗粒感与柔焦结合，赋予独特触感联想' },
+                    { num: 2, x: 70, y: 55, position: 'right', title: '莫兰迪配色', desc: '低饱和度色调，温柔优雅有格调' },
+                    { num: 3, x: 30, y: 60, position: 'left', title: '光泽对比', desc: '果实光泽与磨砂背景形成精致层次' }
+                ]
+            },
+            {
+                id: 10,
+                title: '人物IP设计 - 可爱小女孩形象',
+                tag: 'IP形象设计',
+                description: '原创可爱小女孩IP形象，多场景多姿态设计，适合品牌视觉应用',
+                color: '#f8bbd9',
+                image: 'images/人物IP设计/笙笙屏边城市ip.png',
+                date: '2026.06',
+                category: 'design',
+                github: null,
+                tech: ['Photoshop', 'IP设计', '品牌视觉'],
+                background: '为品牌打造原创IP形象，定位可爱治愈风格的小女孩角色。设计包含多角度基础形象、表情姿态变体（帽子款、眼镜款、围巾款等）、以及商业应用场景展示，适用于周边产品、宣发物料等品牌延展。',
+                designConcept: '以"可爱、治愈、温暖"为核心理念，打造具有亲和力的IP形象。通过圆润的造型、明快的色彩和丰富的表情姿态，让IP成为品牌与用户之间的情感纽带。',
+                palette: ['#f8bbd9', '#ffe4ec', '#ffd54f', '#81d4fa', '#a5d6a7', '#ffffff'],
+                designCategory: 'IP形象设计',
+                designDescription: 'IP形象采用圆脸、大眼睛、圆润身材的可爱造型。配色以粉色系为主色调，搭配明黄色、水蓝色等活力色彩。设计包含正面/侧面/背面多角度展示，以及开心、俏皮、乖巧等多种表情姿态。商业应用展示了抱枕，胸牌、名片马克杯、帆布包等多种周边物料的延展效果。',
+                keywords: ['#可爱', '#治愈', '#小女孩', '#品牌IP', '#商业延展', '#表情变体'],
+                annotations: [
+                    { num: 1, x: 50, y: 25, position: 'top', title: '可爱小女孩形象', desc: '圆润脸庞配大眼，灵动治愈' },
+                    { num: 2, x: 75, y: 50, position: 'right', title: '多姿态变体', desc: '帽子款/眼镜款/围巾款等时尚搭配' },
+                    { num: 3, x: 50, y: 75, position: 'bottom', title: '商业周边展示', desc: '胸牌/马克杯/帆布包等品牌延展' }
+                ]
+            }
+        ];
+
+        // 获取URL参数
+        function getUrlParam(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        // 根据ID获取作品
+        function getWorkById(id) {
+            return worksData.find(work => work.id === parseInt(id));
+        }
+
+        // 绘制封面
+        function drawCover(container, work) {
+            if (work.image) {
+                const img = document.createElement('img');
+                img.src = work.image;
+                img.alt = work.title;
+                img.onerror = function() {
+                    // 图片加载失败时显示占位
+                    container.innerHTML = `<div class="cover-placeholder" style="background: linear-gradient(135deg, ${work.color}, ${adjustColor(work.color, -20)});">${work.title}</div>`;
+                };
+                container.appendChild(img);
+            } else {
+                drawPlaceholderCanvas(container, work);
+            }
+        }
+
+        // 绘制占位封面
+        function drawPlaceholderCanvas(container, work) {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = 1000;
+            canvas.height = 562;
+            drawPlaceholder(ctx, work, canvas.width, canvas.height);
+            container.appendChild(canvas);
+        }
+
+        function drawPlaceholder(ctx, work, width, height) {
+            const gradient = ctx.createLinearGradient(0, 0, width, height);
+            gradient.addColorStop(0, work.color);
+            gradient.addColorStop(0.5, adjustColor(work.color, -10));
+            gradient.addColorStop(1, '#d7ccc8');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, width, height);
+            
+            ctx.fillStyle = 'rgba(255,255,255,0.9)';
+            ctx.font = '600 48px Inter, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(work.title, width/2, height/2);
+            
+            ctx.font = '400 20px Inter, sans-serif';
+            ctx.fillStyle = 'rgba(255,255,255,0.7)';
+            ctx.fillText(work.tag, width/2, height/2 + 50);
+            addWatermark(ctx, width, height);
+        }
+
+        function adjustColor(hex, amount) {
+            const num = parseInt(hex.replace('#', ''), 16);
+            const r = Math.min(255, Math.max(0, (num >> 16) + amount));
+            const g = Math.min(255, Math.max(0, ((num >> 8) & 0xFF) + amount));
+            const b = Math.min(255, Math.max(0, (num & 0xFF) + amount));
+            return `rgb(${r},${g},${b})`;
+        }
+
+        function addWatermark(ctx, width, height) {
+            ctx.font = WATERMARK_CONFIG.font;
+            ctx.fillStyle = WATERMARK_CONFIG.color;
+            const text = WATERMARK_CONFIG.text;
+            const metrics = ctx.measureText(text);
+            const tw = metrics.width;
+            const th = 20;
+
+            ctx.save();
+            ctx.translate(width/2, height/2);
+            ctx.rotate(WATERMARK_CONFIG.angle * Math.PI/180);
+            ctx.translate(-width/2, -height/2);
+
+            for (let y = -width; y < height + th*2; y += WATERMARK_CONFIG.spacingY) {
+                for (let x = -width; x < width + tw; x += tw + WATERMARK_CONFIG.spacingX) {
+                    ctx.fillText(text, x, y);
+                }
+            }
+            ctx.restore();
+        }
+
+        // 显示提示
+        function showNotice(text) {
+            const notice = document.getElementById('watermarkNotice');
+            document.getElementById('noticeText').textContent = text;
+            notice.classList.add('show');
+            setTimeout(() => notice.classList.remove('show'), 3000);
+        }
+
+        // 渲染作品详情
+        function renderWorkDetail(work) {
+            // 处理封面和轮播图
+            const hasCoverImage = !!work.coverImage;
+            const hasScreenshots = work.screenshots && work.screenshots.length > 0;
+
+            if (hasCoverImage) {
+                // 有封面图片：显示封面
+                document.getElementById('workCover').style.display = 'flex';
+                document.getElementById('workCover').innerHTML = `<img src="${work.coverImage}" alt="${work.title}" class="work-cover-img">`;
+                // 如果还有轮播图，也显示
+                if (hasScreenshots) {
+                    document.getElementById('carouselSection').style.display = 'block';
+                    initCarousel(work.screenshots);
+                } else {
+                    document.getElementById('carouselSection').style.display = 'none';
+                }
+            } else if (work.category === 'web' && hasScreenshots) {
+                // Web类作品没有封面图片但有截图：显示轮播图
+                document.getElementById('workCover').style.display = 'none';
+                document.getElementById('carouselSection').style.display = 'block';
+                initCarousel(work.screenshots);
+            } else {
+                // 其他情况：绘制 Canvas 封面
+                document.getElementById('workCover').style.display = 'flex';
+                document.getElementById('carouselSection').style.display = 'none';
+                drawCover(document.getElementById('workCover'), work);
+            }
+
+            // 标签
+            document.getElementById('workTag').textContent = work.tag;
+
+            // 标题
+            document.getElementById('workTitle').textContent = work.title;
+
+            // 元信息
+            const metaContainer = document.getElementById('workMeta');
+            metaContainer.innerHTML = `
+                <span><i class="far fa-calendar"></i> ${work.date}</span>
+                <span><i class="far fa-folder"></i> ${work.category === 'web' ? 'Web开发' : '设计'}</span>
+                ${work.github ? `
+                    <a href="${work.github}" target="_blank" class="github-link">
+                        <i class="fab fa-github"></i> 查看源码
+                    </a>
+                ` : ''}
+            `;
+
+            // 描述
+            document.getElementById('workDescription').textContent = work.description;
+
+            // 技术栈
+            const techContainer = document.getElementById('techList');
+            techContainer.innerHTML = work.tech.map(t => 
+                `<span class="tech-item">${t}</span>`
+            ).join('');
+
+            // Web类作品渲染完整设计内容
+            if (work.category === 'web' && work.role) {
+                renderWebWorkDetails(work);
+                document.getElementById('featuresSection').style.display = 'none';
+                document.getElementById('designSection').style.display = 'none';
+            } 
+            // 设计作品详情
+            else if (work.category === 'design' && work.background) {
+                renderDesignDetails(work);
+                document.getElementById('featuresSection').style.display = 'none';
+            } 
+            // 其他作品（兼容旧的features结构）
+            else {
+                document.getElementById('designSection').style.display = 'none';
+                // 功能特点
+                const featuresContainer = document.getElementById('featureList');
+                if (work.features && work.features.length > 0) {
+                    featuresContainer.innerHTML = work.features.map((f, i) => `
+                        <li class="feature-item">
+                            <div class="feature-icon">${i + 1}</div>
+                            <div class="feature-text">
+                                <strong>${f.title}</strong>
+                                <span>${f.desc}</span>
+                            </div>
+                        </li>
+                    `).join('');
+                } else {
+                    document.getElementById('featuresSection').style.display = 'none';
+                }
+            }
+
+            // 操作按钮
+            const actionsContainer = document.getElementById('workActions');
+            actionsContainer.innerHTML = `
+                ${work.github ? `
+                    <a href="${work.github}" target="_blank" class="btn btn-primary">
+                        <i class="fab fa-github"></i>
+                        查看源码
+                    </a>
+                ` : ''}
+                <a href="index.html#works" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i>
+                    返回作品集
+                </a>
+            `;
+
+            // 渲染更多作品
+            renderMoreWorks(work.id);
+        }
+
+        // 渲染Web作品的完整设计内容
+        function renderWebWorkDetails(work) {
+            // 角色
+            document.getElementById('roleSection').style.display = 'block';
+            document.getElementById('roleText').textContent = work.role;
+
+            // 项目背景
+            document.getElementById('backgroundSectionWeb').style.display = 'block';
+            document.getElementById('backgroundText').textContent = work.background;
+
+            // 设计目标
+            document.getElementById('designGoalsSection').style.display = 'block';
+            const goalsContainer = document.getElementById('designGoals');
+            goalsContainer.innerHTML = work.designGoals.map(goal => `
+                <div class="design-goal-item">
+                    <div class="design-goal-title">
+                        <i class="fas fa-check-circle"></i>
+                        ${goal.title}
+                    </div>
+                    <p class="design-goal-desc">${goal.desc}</p>
+                </div>
+            `).join('');
+
+            // 设计亮点
+            document.getElementById('designHighlightsSection').style.display = 'block';
+            const highlightsContainer = document.getElementById('designHighlights');
+            highlightsContainer.innerHTML = work.designHighlights.map((h, i) => `
+                <div class="design-highlight-item">
+                    <div class="design-highlight-header">
+                        <div class="design-highlight-num">${i + 1}</div>
+                        <div class="design-highlight-title">${h.title}</div>
+                    </div>
+                    <p class="design-highlight-content">${h.content}</p>
+                </div>
+            `).join('');
+
+            // 项目成果
+            document.getElementById('resultsSection').style.display = 'block';
+            const resultsContainer = document.getElementById('projectResults');
+            resultsContainer.innerHTML = `
+                <h4><i class="fas fa-trophy"></i> 项目成果</h4>
+                <ul>
+                    ${work.results.map(r => `<li>${r}</li>`).join('')}
+                </ul>
+            `;
+
+            // 项目收获
+            document.getElementById('gainsSection').style.display = 'block';
+            const gainsContainer = document.getElementById('projectGains');
+            gainsContainer.innerHTML = work.gains.map(g => `
+                <div class="gain-item">${g}</div>
+            `).join('');
+        }
+
+        // 渲染设计作品详情
+        function renderDesignDetails(work) {
+            const designSection = document.getElementById('designSection');
+            designSection.style.display = 'block';
+
+            // 项目背景
+            document.getElementById('backgroundContent').textContent = work.background;
+
+            // 设计理念
+            document.getElementById('designConcept').textContent = `" ${work.designConcept} "`;
+
+            // 设计信息栏
+            document.getElementById('designInfoBar').innerHTML = `
+                <div class="design-info-item">
+                    <span class="design-info-label">类别</span>
+                    <span class="design-info-value">${work.designCategory || work.tag}</span>
+                </div>
+                <div class="design-info-item">
+                    <span class="design-info-label">时间</span>
+                    <span class="design-info-value">${work.date}</span>
+                </div>
+            `;
+
+            // 配色方案
+            const paletteContainer = document.getElementById('colorPalette');
+            paletteContainer.innerHTML = work.palette.map(color => 
+                `<div class="color-swatch" style="background-color: ${color};" data-color="${color}" title="${color}"></div>`
+            ).join('');
+
+            // 设计说明
+            document.getElementById('designDescription').textContent = work.designDescription;
+
+            // 关键词
+            const keywordsContainer = document.getElementById('keywordTags');
+            keywordsContainer.innerHTML = work.keywords.map(kw => 
+                `<span class="keyword-tag">${kw}</span>`
+            ).join('');
+
+            // 渲染手绘标注
+            renderAnnotations(work);
+        }
+
+        // 渲染手绘标注
+        function renderAnnotations(work) {
+            const container = document.getElementById('sketchAnnotations');
+            container.innerHTML = '';
+
+            if (!work.annotations || work.annotations.length === 0) return;
+
+            work.annotations.forEach((ann, index) => {
+                const annotation = document.createElement('div');
+                annotation.className = 'sketch-annotation';
+                annotation.style.left = `${ann.x}%`;
+                annotation.style.top = `${ann.y}%`;
+                annotation.style.animationDelay = `${index * 0.2}s`;
+
+                // 气泡位置调整
+                let bubbleClass = ann.position;
+                let bubbleStyle = '';
+                if (ann.position === 'left') {
+                    bubbleStyle = 'right: 45px; top: 50%; transform: translateY(-50%);';
+                } else if (ann.position === 'right') {
+                    bubbleStyle = 'left: 45px; top: 50%; transform: translateY(-50%);';
+                } else if (ann.position === 'top') {
+                    bubbleStyle = 'bottom: 45px; left: 50%; transform: translateX(-50%);';
+                } else {
+                    bubbleStyle = 'top: 45px; left: 50%; transform: translateX(-50%);';
+                }
+
+                annotation.innerHTML = `
+                    <div class="annotation-point">${ann.num}</div>
+                    <div class="annotation-bubble ${bubbleClass}" style="${bubbleStyle}">
+                        <h5>${ann.title}</h5>
+                        <p>${ann.desc}</p>
+                    </div>
+                `;
+
+                container.appendChild(annotation);
+            });
+        }
+
+        // 渲染更多作品
+        let moreWorksAll = [];
+        let moreWorksCategory = 'all';
+        let moreWorksSearch = '';
+
+        function renderMoreWorks(currentId) {
+            moreWorksAll = worksData.filter(w => w.id !== currentId);
+            const container = document.getElementById('moreWorksGrid');
+            const emptyEl = document.getElementById('moreWorksEmpty');
+            filterAndRenderMoreWorks(container, emptyEl);
+        }
+
+        function setMoreWorksCategory(category) {
+            moreWorksCategory = category;
+            document.querySelectorAll('.more-works-filter .filter-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.category === category);
+            });
+            filterAndRenderMoreWorks(
+                document.getElementById('moreWorksGrid'),
+                document.getElementById('moreWorksEmpty')
+            );
+        }
+
+        function filterMoreWorks() {
+            moreWorksSearch = document.getElementById('moreWorksSearch').value.trim().toLowerCase();
+            filterAndRenderMoreWorks(
+                document.getElementById('moreWorksGrid'),
+                document.getElementById('moreWorksEmpty')
+            );
+        }
+
+        function filterAndRenderMoreWorks(container, emptyEl) {
+            const filtered = moreWorksAll.filter(work => {
+                const matchCategory = moreWorksCategory === 'all' || work.category === moreWorksCategory;
+                const matchSearch = !moreWorksSearch || 
+                    work.title.toLowerCase().includes(moreWorksSearch) ||
+                    work.description.toLowerCase().includes(moreWorksSearch) ||
+                    (work.tag && work.tag.toLowerCase().includes(moreWorksSearch));
+                return matchCategory && matchSearch;
+            });
+
+            emptyEl.style.display = filtered.length === 0 ? 'block' : 'none';
+
+            container.innerHTML = filtered.slice(0, 4).map(work => `
+                <div class="more-work-card" onclick="location.href='work-detail.html?id=${work.id}'">
+                    <div class="more-work-image">
+                        ${work.image 
+                            ? `<img src="${work.image}" alt="${work.title}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                               <div class="more-work-fallback" style="background: linear-gradient(135deg, ${work.color}, ${adjustColor(work.color, -30)}); display: none;">
+                                   <i class="fas fa-image"></i>
+                               </div>`
+                            : `<canvas width="320" height="200" data-work='${JSON.stringify(work).replace(/'/g, "&#39;")}'></canvas>`
+                        }
+                        <span class="more-work-tag">${work.tag}</span>
+                    </div>
+                    <div class="more-work-info">
+                        <h4>${work.title}</h4>
+                        <p>${work.description}</p>
+                    </div>
+                </div>
+            `).join('');
+
+            // 绘制 Canvas 封面
+            document.querySelectorAll('.more-work-image canvas').forEach(canvas => {
+                const work = JSON.parse(canvas.dataset.work);
+                drawCover(canvas, work);
+            });
+        }
+
+        // 轮播图控制
+        let currentSlide = 0;
+        let carouselData = [];
+
+        function initCarousel(screenshots) {
+            carouselData = screenshots;
+            currentSlide = 0;
+            renderCarouselSlides();
+            renderCarouselDots();
+            renderCarouselThumbnails();
+            updateCarouselPosition();
+        }
+
+        function renderCarouselSlides() {
+            const wrapper = document.getElementById('carouselWrapper');
+            wrapper.innerHTML = carouselData.map((s, i) => {
+                // 如果有真实图片路径，显示图片；否则显示渐变卡片
+                if (s.src) {
+                    return `
+                        <div class="carousel-slide">
+                            <img src="${s.src}" alt="${s.title}" class="carousel-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="carousel-screen-fallback" style="background: linear-gradient(135deg, #8a9a7c, #6a7a5c); display: none;">
+                                <i class="fas fa-image"></i>
+                                <span class="carousel-screen-title">${s.title}</span>
+                            </div>
+                        </div>
+                    `;
+                }
+                return `
+                    <div class="carousel-slide">
+                        <div class="carousel-screen" style="background: linear-gradient(135deg, ${s.color}, ${adjustColor(s.color, -30)});">
+                            <i class="fas ${s.icon}"></i>
+                            <span class="carousel-screen-title">${s.title}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderCarouselDots() {
+            const container = document.getElementById('carouselDots');
+            container.innerHTML = carouselData.map((_, i) => `
+                <button class="carousel-dot ${i === 0 ? 'active' : ''}" data-index="${i}" onclick="goToSlide(${i})"></button>
+            `).join('');
+        }
+
+        function renderCarouselThumbnails() {
+            const container = document.getElementById('carouselThumbnails');
+            container.innerHTML = carouselData.map((s, i) => {
+                // 如果有真实图片路径，显示缩略图；否则显示渐变卡片
+                if (s.src) {
+                    return `
+                        <div class="carousel-thumbnail ${i === 0 ? 'active' : ''}" data-index="${i}" onclick="goToSlide(${i})">
+                            <img src="${s.src}" alt="${s.title}" class="carousel-thumbnail-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="carousel-thumbnail-fallback" style="display: none; align-items: center; justify-content: center;">
+                                <i class="fas fa-image"></i>
+                            </div>
+                            <span class="carousel-thumbnail-title">${s.title}</span>
+                        </div>
+                    `;
+                }
+                return `
+                    <div class="carousel-thumbnail ${i === 0 ? 'active' : ''}" style="background: ${adjustColor(s.color, -15)};" data-index="${i}" onclick="goToSlide(${i})">
+                        <i class="fas ${s.icon}"></i>
+                        <span class="carousel-thumbnail-title">${s.title}</span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function updateCarouselPosition() {
+            const wrapper = document.getElementById('carouselWrapper');
+            wrapper.style.transform = `translateX(-${currentSlide * 100}%)`;
+
+            // 更新dots
+            document.querySelectorAll('.carousel-dot').forEach((dot, i) => {
+                dot.classList.toggle('active', i === currentSlide);
+            });
+
+            // 更新缩略图
+            document.querySelectorAll('.carousel-thumbnail').forEach((thumb, i) => {
+                thumb.classList.toggle('active', i === currentSlide);
+            });
+        }
+
+        function goToSlide(index) {
+            currentSlide = index;
+            updateCarouselPosition();
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % carouselData.length;
+            updateCarouselPosition();
+        }
+
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + carouselData.length) % carouselData.length;
+            updateCarouselPosition();
+        }
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            const workId = getUrlParam('id');
+            
+            if (!workId) {
+                showNotice('未指定作品');
+                setTimeout(() => location.href = 'index.html#works', 1500);
+                return;
+            }
+
+            const work = getWorkById(workId);
+            
+            if (!work) {
+                showNotice('作品不存在');
+                setTimeout(() => location.href = 'index.html#works', 1500);
+                return;
+            }
+
+            // 隐藏加载状态，显示内容
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('detailContent').style.display = 'block';
+            document.getElementById('pageFooter').style.display = 'flex';
+
+            // 渲染详情
+            renderWorkDetail(work);
+
+            // 绑定轮播图导航按钮
+            document.getElementById('carouselPrev').addEventListener('click', prevSlide);
+            document.getElementById('carouselNext').addEventListener('click', nextSlide);
+
+            // 键盘导航
+            document.addEventListener('keydown', (e) => {
+                if (carouselData.length > 0) {
+                    if (e.key === 'ArrowLeft') prevSlide();
+                    if (e.key === 'ArrowRight') nextSlide();
+                }
+            });
+
+            // 更新页面标题
+            document.title = `${work.title} - Ginyo by Margerat`;
+        });
+    </script>
+</body>
+</html>
