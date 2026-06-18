@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <style>
         :root {
             --primary: #4db6ac;
@@ -981,6 +982,11 @@
             justify-content: center;
         }
 
+        .contact-form .btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
         /* ========== 表单输入动画 ========== */
         .form-group input,
         .form-group textarea {
@@ -1423,22 +1429,22 @@
                 </div>
 
                 <div class="contact-form-wrapper">
-                    <form class="contact-form" onsubmit="handleSubmit(event)">
+                    <form class="contact-form" id="contactForm">
                         <div class="form-group">
                             <label>姓名</label>
-                            <input type="text" placeholder="请输入您的姓名" required>
+                            <input type="text" name="from_name" placeholder="请输入您的姓名" required>
                         </div>
                         <div class="form-group">
                             <label>邮箱</label>
-                            <input type="email" placeholder="请输入您的邮箱" required>
+                            <input type="email" name="from_email" placeholder="请输入您的邮箱" required>
                         </div>
                         <div class="form-group">
                             <label>留言</label>
-                            <textarea placeholder="请输入您的留言..." required></textarea>
+                            <textarea name="message" placeholder="请输入您的留言..." required></textarea>
                         </div>
-                        <button type="submit" class="btn btn-primary">
+                        <button type="submit" class="btn btn-primary" id="submitBtn">
                             <i class="fas fa-paper-plane"></i>
-                            发送消息
+                            <span id="submitText">发送消息</span>
                         </button>
                     </form>
                 </div>
@@ -2033,8 +2039,39 @@
 
         function handleSubmit(e) {
             e.preventDefault();
-            showNotice('消息已发送！');
-            e.target.reset();
+            const btn = document.getElementById('submitBtn');
+            const text = document.getElementById('submitText');
+
+            btn.disabled = true;
+            text.textContent = '发送中...';
+
+const serviceID = 'service_sqrjnd9';
+const templateID = 'template_7n45re6';
+const publicKey = '0dyjxfy9PKXKSlupW';
+
+            if (serviceID === 'YOUR_SERVICE_ID') {
+                showNotice('⚠️ 请先配置 EmailJS！详情见页脚说明。');
+                btn.disabled = false;
+                text.textContent = '发送消息';
+                return;
+            }
+
+            const templateParams = {
+                from_name: e.target.from_name.value,
+                from_email: e.target.from_email.value,
+                message: e.target.message.value
+            };
+
+            emailjs.send(serviceID, templateID, templateParams, publicKey)
+                .then(() => {
+                    showNotice('✅ 消息发送成功！我会尽快回复你~');
+                    e.target.reset();
+                }, () => {
+                    showNotice('❌ 发送失败，请通过其他方式联系我！');
+                }).finally(() => {
+                    btn.disabled = false;
+                    text.textContent = '发送消息';
+                });
         }
 
         // 分类筛选
@@ -2078,6 +2115,15 @@
 
         // 初始化
         document.addEventListener('DOMContentLoaded', () => {
+            // 初始化 EmailJS
+            if (typeof emailjs !== 'undefined') {
+                // 请将 YOUR_PUBLIC_KEY 替换为你的 EmailJS Public Key
+                emailjs.init('0dyjxfy9PKXKSlupW');
+            }
+
+            // 绑定联系表单
+            document.getElementById('contactForm').addEventListener('submit', handleSubmit);
+
             filterWorks();
             typeWriter();
             handleScrollAnimations();
